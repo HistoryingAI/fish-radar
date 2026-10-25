@@ -95,6 +95,30 @@ git push
 | 頁面還是舊數據 | 部署有延遲 + 瀏覽器緩存 | 等 30 秒，Ctrl+F5 |
 | `git push` 被拒絕 | 沒登入、或遠端有別的提交 | 重新 push，會彈登入視窗 |
 | `git` 不是指令 | 裝完沒重開機 / 沒加進 PATH | 重開機；還不行就重裝並勾選 PATH |
+| `Recv failure: Connection was reset` | Git 沒走代理，直連 github.com 被重置 | 見下面「代理」一節 |
+| `schannel: SEC_E_NO_CREDENTIALS` | 拿不到 Windows 憑證（常見於沙箱／受限帳號） | 用普通帳號開終端，不要用服務身分跑 |
+
+### 代理（大陸網路必看）
+
+Git **不會讀** Windows 的系統代理，瀏覽器能開不代表 Git 能推。這個倉庫已經在 `.git/config` 裡配好：
+
+```
+http.proxy  = http://127.0.0.1:7897
+https.proxy = http://127.0.0.1:7897
+```
+
+`7897` 是 Clash Verge 的預設端口。**換了代理軟體或改了端口，要跟著改這裡**，
+否則 push 會卡住或報 `Connection was reset`。
+
+改的方法（在 `fish-radar` 資料夾裡）：
+
+```bash
+git config http.proxy http://127.0.0.1:新端口
+git config https.proxy http://127.0.0.1:新端口
+```
+
+> ⚠️ 配了代理之後，**代理軟體沒開就推不上去**。要臨時直連，先 `git config --unset http.proxy`。
+> 怎麼查自己的端口：Windows「設定 → 網路和網際網路 → Proxy」，或看代理軟體的設定頁。
 | 手機能開、電腦不能 | 見下一節 | |
 
 ---
