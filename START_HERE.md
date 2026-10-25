@@ -42,6 +42,7 @@ Gemini 娘、Kimi 娘、豆包娘、千問娘）的**二創熱帖**聚合成一�
 
 | 項目 | 數值 |
 |---|---|
+| **線上網址** | **https://fish-radar-two.vercel.app/** |
 | 榜上條目 | **572**（B 站 525 / GitHub 47，其中 🏆 經典 21） |
 | 檢視：近 7 天 | **396** 條（預設看到的） |
 | 檢視：近 30 天 | **551** 條 |
@@ -49,7 +50,10 @@ Gemini 娘、Kimi 娘、豆包娘、千問娘）的**二創熱帖**聚合成一�
 | 採集窗口 | **30 天**（`config.json` 的 `window_days`，可用 `--days` 臨時覆蓋） |
 | 首屏 | 30 條 / 28.9 KB，其餘 542 條 / 478.4 KB 異步補 |
 | 自動跑 | 尚未排程；`data/health.json` 已經在寫（最後成功時間／連續失敗次數） |
-| 測試 | `node test_render.js` 全過；`python test_page.py` 全過（1 警告：og:image 還是相對路徑） |
+| 測試 | `node test_render.js` 全過；`python test_page.py` 全過（0 警告，og:image 已改絕對） |
+
+**大陸可達性（2026-10-25 實測）**：同一台機器，走代理 0.6 秒 200，**直連 21 秒超時**。
+所以這個網址只對「能連境外」的人有效；要給大陸用戶穩定入口，得走國內託管 + 備案，那是另一件事。
 
 **兩個窗口，別搞混**：採集窗口 30 天（存多少）／檢視窗口 7、30、全部（畫多少）。
 預設仍是「近 7 天」——主榜的定位是「現在正在熱」，30 天是回頭看，不搶預設。
@@ -265,9 +269,9 @@ C:\Users\woshinidie\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\
 
 1. ~~**等 `ai-film-radar` 那輪爬完 → 跑一次 `collect.py`**~~ ✅ 2026-10-25 09:48 跑完，
    232 + 34 條，零 412。下一次抓之前一樣要先確認對面沒在跑。
-2. **上線 → 見 [`DEPLOY.md`](DEPLOY.md)**（GitHub + Vercel，預設二級域名）。
-   順序：裝 Git → 建空倉庫 → 推上去 → Vercel Import → `python set_og.py https://xxx.vercel.app`。
-   上線後第一件事是**找 3–5 個不同運營商的人試能不能開**（`*.vercel.app` 在大陸不穩）。
+2. ~~**上線（GitHub + Vercel）**~~ ✅ 2026-10-25 20:23 上線：
+   **https://fish-radar-two.vercel.app/**，og:image 已改絕對，`test_page.py` 警告清零。
+   待驗：找 3–5 個不同運營商的人開一下（本機實測直連 21 秒超時、代理 0.6 秒）。
 3. **準確率抽測（最重要，一直沒做）**
    從 572 條裡隨機抽 50 條人工標「該收／不該收」，算 precision。
    拿使用者給過的四條（`seeds.txt` 裡那四條）當 recall 基準。
