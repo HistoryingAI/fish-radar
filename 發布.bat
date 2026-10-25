@@ -2,8 +2,12 @@
 chcp 65001 >nul
 cd /d "%~dp0"
 
-where git >nul 2>nul
-if errorlevel 1 (
+set "GIT="
+where git >nul 2>nul && set "GIT=git"
+if not defined GIT if exist "%ProgramFiles%\Git\cmd\git.exe" set "GIT=%ProgramFiles%\Git\cmd\git.exe"
+if not defined GIT if exist "%ProgramFiles(x86)%\Git\cmd\git.exe" set "GIT=%ProgramFiles(x86)%\Git\cmd\git.exe"
+
+if not defined GIT (
   echo [错误] 找不到 git。
   echo 先装 Git for Windows，装完重新开机，再双击本文件。
   echo 下载：https://git-scm.com/download/win
@@ -12,7 +16,7 @@ if errorlevel 1 (
   exit /b 1
 )
 
-git rev-parse --is-inside-work-tree >nul 2>nul
+"%GIT%" rev-parse --is-inside-work-tree >nul 2>nul
 if errorlevel 1 (
   echo [提示] 这个文件夹还不是 git 仓库。
   echo 先照 DEPLOY.md 的「一次性设定」做一遍，之后这按钮就能用了。
@@ -27,12 +31,12 @@ echo   把 data 的变化推上去
 echo ============================================
 echo.
 
-git add data/
+"%GIT%" add data/
 
-git diff --cached --quiet
+"%GIT%" diff --cached --quiet
 if errorlevel 1 (
-  git commit -m "data: 自动更新"
-  git push
+  "%GIT%" commit -m "data: 自动更新"
+  "%GIT%" push
   echo.
   echo 推上去了。等 30 秒 Vercel 会自动部署，然后刷新网页就好。
 ) else (
