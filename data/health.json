@@ -1,0 +1,10 @@
+{
+ "last_attempt": "2026-10-25T12:07:23+08:00",
+ "last_ok": "2026-10-25T12:07:23+08:00",
+ "consecutive_failures": 0,
+ "last_error": null,
+ "posts": 572,
+ "took_seconds": 366.5,
+ "runs": 1,
+ "ok_runs": 1
+}

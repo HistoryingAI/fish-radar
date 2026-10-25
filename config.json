@@ -1,0 +1,99 @@
+{
+  "window_days": 30,
+  "hide_platforms": [],
+  "guard": {
+    "enabled": true,
+    "other_db": "../ai-film-radar/data/radar.db",
+    "minutes": 10
+  },
+  "characters": [
+    {
+      "id": "deepseek",
+      "name": "DeepSeek 娘",
+      "alias": "藍色大肥魚 · 鯨魚娘",
+      "queries": ["deepseek娘", "大肥鱼"],
+      "match": ["deepseek娘", "deep seek娘", "蓝色大肥鱼", "藍色大肥魚", "大肥鱼", "大肥魚", "鲸鱼娘", "鯨魚娘", "蓝鲸娘", "藍鯨娘", "fish radar"]
+    },
+    {
+      "id": "claude",
+      "name": "Claude 娘",
+      "alias": "克勞德 · 大小姐",
+      "queries": ["claude娘"],
+      "match": ["claude娘", "claude 娘", "克劳德娘", "克勞德娘", "claude大小姐", "克劳德大小姐"]
+    },
+    {
+      "id": "gpt",
+      "name": "GPT 娘",
+      "alias": "ChatGPT 擬人",
+      "queries": ["gpt娘", "gpt龙娘"],
+      "match": ["gpt娘", "gpt 娘", "chatgpt娘", "chatgpt 娘", "chatgpt拟人"]
+    },
+    {
+      "id": "grok",
+      "name": "Grok 娘",
+      "alias": "馬斯克家的",
+      "queries": ["grok娘"],
+      "match": ["grok娘", "grok 娘"]
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini 娘",
+      "alias": "雙子星",
+      "queries": ["gemini娘"],
+      "match": ["gemini娘", "gemini 娘"]
+    },
+    {
+      "id": "kimi",
+      "name": "Kimi 娘",
+      "alias": "月之暗面",
+      "queries": ["kimi娘"],
+      "match": ["kimi娘", "kimi 娘", "月之暗面娘"]
+    },
+    {
+      "id": "doubao",
+      "name": "豆包娘",
+      "alias": "字節跳動",
+      "queries": ["豆包娘"],
+      "match": ["豆包娘", "豆包 娘", "豆包拟人"]
+    },
+    {
+      "id": "qwen",
+      "name": "千問娘",
+      "alias": "通義千問",
+      "queries": ["千问娘"],
+      "match": ["千问娘", "千問娘", "通义千问娘", "qwen娘", "千问拟人"]
+    }
+  ],
+  "global_queries": ["AI娘"],
+  "creative_words": [
+    "手书", "手書", "mmd", "立绘", "立繪", "表情包", "梗图", "梗圖", "同人", "二创", "二創",
+    "拟人", "擬人", "四格", "漫画", "漫畫", "插画", "插畫", "绘画", "繪畫", "画师", "畫師",
+    "配音", "整活", "短片", "动画", "動畫", "壁纸", "壁紙", "sticker", "fanart", "娘化",
+    "q版", "手绘", "手繪", "摸鱼", "摸魚", "兽化", "獸化", "抱枕", "徽章", "吧唧", "周边", "周邊"
+  ],
+  "tech_words": [
+    "教程", "报错", "報錯", "显卡", "顯卡", "显存", "顯存",
+    "微调", "微調", "量化", "蒸馏", "蒸餾", "评测", "評測", "跑分", "benchmark",
+    "价格", "價格", "收费", "收費", "订阅", "訂閱", "充值", "api", "sdk", "token", "上下文",
+    "源码", "源碼", "编程", "編程", "面试", "面試", "招聘", "裁员", "裁員", "融资", "融資",
+    "股价", "股價", "参数量", "參數量", "推理成本", "显卡驱动"
+  ],
+  "tech_soft_words": ["部署", "安装", "安裝", "配置", "训练", "訓練"],
+  "github_queries": ["\"AI娘\"", "\"DeepSeek娘\"", "deepseek 娘", "bluedafeiyu", "\"AI 娘\" 表情包"],
+  "github_seeds": [
+    {
+      "repo": "Alterssss/dsh-bili-whale",
+      "character": "deepseek",
+      "note": "B 站「AI 娘接管賬號」這波潮的源頭：給 DSH 裝一條會自己按作息刷 B 站、看懂視頻、寫日記並 @ 你的魚。"
+    }
+  ],
+  "github_min_stars": 0,
+  "bilibili_delay": 3.0,
+  "bilibili_chunk": 0,
+  "bilibili_chunk_pause": 180,
+  "bilibili_412_pause": 120,
+  "classic_per_query": 6,
+  "bilibili_author_watch": ["星落落_oi", "冬冰", "ZipZipPipe"],
+  "bilibili_related_seeds": 13,
+  "bilibili_author_seeds": 8
+}

@@ -1,0 +1,50 @@
+name: 更新肥魚雷達數據
+
+# ⚠️ 2026-10-25 改：只保留「手動觸發」，把定時拿掉了。
+#
+# 為什麼：這個 workflow 跑在 GitHub 的機器上，用的是機房 IP。
+# B 站對機房 IP 比對家用 IP 敏感得多，撞 412 的機率明顯更高。
+# 現在的主線是「本機抓 → git push → Vercel 自動部署」（見 DEPLOY.md），
+# 抓取留在家裡跑；Actions 只當緊急備援：人在外面、電腦關著，
+# 又非得更新一次的時候，才來這裡手動點一下。
+#
+# 要恢復定時，把 schedule 兩行取消註解即可——但先想清楚 412 的代價。
+on:
+  # schedule:
+  #   - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+# 允許機器人把抓到的數據 commit 回倉庫
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 把倉庫拉下來
+        uses: actions/checkout@v4
+
+      - name: 裝 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # 注意：這裡不需要 pip install，collect.py 只用 Python 自帶的功能。
+      - name: 抓取並去重
+        env:
+          # 帶上 token 可以讓 GitHub 搜索額度從 10次/分鐘 升到 30次/分鐘
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python collect.py
+
+      - name: 把新數據提交回倉庫
+        run: |
+          git config user.name "fish-radar-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "這次沒有新內容，不提交。"
+          else
+            git commit -m "chore: 自動更新數據 $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+          fi

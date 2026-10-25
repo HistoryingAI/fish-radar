@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分類方法 · 肥魚雷達</title>
+<meta name="description" content="肥魚雷達憑什麼收一條帖子：角色詞、二創詞與技術詞怎麼對撞，強相關和相關差在哪，五個入口各自的偏見，以及現在還不知道準確率的原因。">
+<meta name="theme-color" content="#070d18">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分類方法 · 肥魚雷達">
+<meta property="og:description" content="三件事同時成立才進榜。這一頁寫清楚規則、代價，和它現在會錯在哪。">
+<meta property="og:image" content="og-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root{
+    --bg:#070d18;
+    --bg2:#0c1626;
+    --card:#101d31;
+    --card2:#152540;
+    --line:rgba(120,180,255,.14);
+    --txt:#e8f1ff;
+    --dim:#8ba3c7;
+    --dim2:#5f7699;
+    --accent:#4cc9f0;
+    --accent2:#3a86ff;
+    --hot:#ff7a45;
+    --ok:#3ddc97;
+    --warn:#f4b740;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"PingFang TC","Microsoft JhengHei","Noto Sans TC",system-ui,-apple-system,"Segoe UI",sans-serif;
+    background:
+      radial-gradient(900px 500px at 12% -8%, rgba(58,134,255,.18), transparent 60%),
+      radial-gradient(700px 420px at 92% 4%, rgba(76,201,240,.12), transparent 55%),
+      var(--bg);
+    color:var(--txt);
+    min-height:100vh;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:linear-gradient(rgba(120,180,255,.045) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(120,180,255,.045) 1px,transparent 1px);
+    background-size:44px 44px;
+    mask-image:radial-gradient(circle at 50% 0%,#000 0%,transparent 72%);
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{position:relative;z-index:1;max-width:940px;margin:0 auto;padding:26px 22px 90px}
+
+  /* ---------- 顶部 ---------- */
+  .top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:46px}
+  .back{display:inline-flex;align-items:center;gap:8px;color:var(--dim);font-size:13.5px}
+  .back:hover{color:var(--accent);text-decoration:none}
+  .ctrl{display:flex;gap:8px}
+  .navbtn{
+    background:rgba(120,180,255,.08);border:1px solid var(--line);color:var(--dim);
+    border-radius:9px;padding:6px 11px;font-size:12.5px;cursor:pointer;font-family:inherit;
+  }
+  .navbtn:hover{color:var(--txt);border-color:rgba(120,180,255,.32)}
+
+  /* ---------- hero ---------- */
+  .kicker{font-size:11.5px;letter-spacing:.24em;color:var(--accent);text-transform:uppercase;margin-bottom:14px}
+  h1{
+    font-size:clamp(30px,5.2vw,46px);line-height:1.18;margin:0 0 16px;
+    font-weight:800;letter-spacing:-.5px;
+  }
+  h1 em{font-style:normal;color:var(--accent)}
+  .lede{max-width:720px;color:var(--dim);font-size:15.5px;margin:0}
+  .lede b{color:var(--txt);font-weight:600}
+
+  /* ---------- 数字条 ---------- */
+  .stats{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:12px;
+    overflow:hidden;margin:34px 0 10px;
+  }
+  .stat{background:var(--card);padding:16px 18px}
+  .stat .n{font-size:25px;font-weight:800;line-height:1.15;letter-spacing:-.5px}
+  .stat .n small{font-size:12px;color:var(--dim2);font-weight:500;margin-left:3px}
+  .stat .k{font-size:11.5px;color:var(--dim2);margin-top:3px;letter-spacing:.04em}
+  .stat.s .n{color:var(--ok)}
+  .stat.w .n{color:var(--warn)}
+
+  /* ---------- 章节 ---------- */
+  section{margin-top:52px}
+  h2{
+    font-size:19px;margin:0 0 6px;font-weight:700;letter-spacing:.2px;
+    display:flex;align-items:baseline;gap:10px;
+  }
+  h2 .no{
+    font-size:12px;color:var(--accent);font-weight:600;letter-spacing:.1em;
+    border:1px solid rgba(76,201,240,.35);border-radius:6px;padding:2px 7px;
+    transform:translateY(-2px);
+  }
+  h3{font-size:14.5px;margin:22px 0 6px;color:var(--txt);font-weight:650}
+  p{margin:10px 0;color:var(--dim);font-size:14.5px}
+  p b,li b{color:var(--txt);font-weight:600}
+  ul{margin:10px 0;padding-left:20px;color:var(--dim);font-size:14.5px}
+  li{margin:6px 0}
+  code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:12.8px;background:rgba(120,180,255,.09);border:1px solid var(--line);
+    border-radius:5px;padding:1px 6px;color:#9fd6ff;
+  }
+  .box{
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:18px 20px;margin:16px 0;
+  }
+  .box.rule{border-left:3px solid var(--accent)}
+  .box.warn{border-left:3px solid var(--warn)}
+  .box.bad{border-left:3px solid var(--hot)}
+  .box.good{border-left:3px solid var(--ok)}
+  .box h3{margin-top:0}
+  .box p:last-child{margin-bottom:0}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.6px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--dim2);font-weight:600;font-size:12px;letter-spacing:.06em}
+  td b{color:var(--txt)}
+  tbody tr:hover{background:rgba(120,180,255,.035)}
+
+  /* ---------- 规则卡：三段判定 ---------- */
+  .flow{margin:18px 0}
+  .flow .step{
+    display:flex;gap:14px;padding:14px 0;border-bottom:1px dashed var(--line);
+  }
+  .flow .step:last-child{border-bottom:0}
+  .flow .q{
+    flex:0 0 26px;height:26px;border-radius:8px;display:grid;place-items:center;
+    background:rgba(76,201,240,.12);color:var(--accent);font-size:12px;font-weight:700;
+    border:1px solid rgba(76,201,240,.3);
+  }
+  .flow .a{flex:1}
+  .flow .a h3{margin:0 0 4px;font-size:14.5px}
+  .flow .a p{margin:0;font-size:13.8px}
+
+  .tag{
+    display:inline-block;font-size:11.5px;padding:1px 8px;border-radius:999px;
+    border:1px solid;margin-left:6px;transform:translateY(-1px);
+  }
+  .tag.s{color:var(--ok);border-color:rgba(61,220,151,.4);background:rgba(61,220,151,.08)}
+  .tag.w{color:var(--warn);border-color:rgba(244,183,64,.4);background:rgba(244,183,64,.08)}
+  .tag.d{color:var(--hot);border-color:rgba(255,122,69,.4);background:rgba(255,122,69,.08)}
+
+  .quote{
+    border-left:2px solid rgba(120,180,255,.3);padding:2px 0 2px 14px;margin:14px 0;
+    color:var(--dim2);font-size:13.5px;
+  }
+  footer{
+    margin-top:64px;padding-top:22px;border-top:1px solid var(--line);
+    color:var(--dim2);font-size:12.5px;display:flex;justify-content:space-between;
+    gap:14px;flex-wrap:wrap;
+  }
+
+  /* ---------- 浅色 ---------- */
+  body[data-theme="light"]{
+    --bg:#eef4fc;--card:#ffffff;--card2:#f4f8ff;--line:rgba(24,64,120,.13);
+    --txt:#0f2540;--dim:#41597a;--dim2:#6b7f99;
+  }
+  body[data-theme="light"]::before{opacity:.5}
+  body[data-theme="light"] .navbtn{background:rgba(20,60,110,.05)}
+  body[data-theme="light"] .stat{background:#fff}
+  body[data-theme="light"] .box{background:#fff}
+  body[data-theme="light"] code{background:rgba(20,60,110,.06);color:#1a5c96}
+
+  @media (max-width:720px){
+    .stats{grid-template-columns:repeat(3,1fr)}
+    .stat:nth-child(4),.stat:nth-child(5){display:none}
+    h1{font-size:30px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a class="back" href="index.html">← 回到看板</a>
+    <div class="ctrl">
+      <button class="navbtn" id="langBtn" title="切換簡體／繁體">繁</button>
+      <button class="navbtn" id="themeBtn" title="切換深色／淺色">☀️</button>
+    </div>
+  </div>
+
+  <div class="kicker">Method · 口徑與已知錯誤</div>
+  <h1>一條帖子，<br>怎麼才算「<em>AI 娘二創</em>」</h1>
+  <p class="lede">
+    這頁寫三件事：<b>憑什麼收</b>、<b>憑什麼不收</b>，以及<b>它現在會錯在哪</b>。
+    規則只有 12 行，少是故意的——規則越多，越容易只對「自己標過的那批」有效。
+  </p>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="st-total">—</div><div class="k">榜上條目</div></div>
+    <div class="stat s"><div class="n" id="st-strong">—</div><div class="k">強相關</div></div>
+    <div class="stat w"><div class="n" id="st-weak">—</div><div class="k">相關（待人工看）</div></div>
+    <div class="stat"><div class="n" id="st-classic">—</div><div class="k">🏆 經典</div></div>
+    <div class="stat"><div class="n" id="st-window">—</div><div class="k">採集窗口</div></div>
+  </div>
+
+  <!-- ========== 1 ========== -->
+  <section>
+    <h2><span class="no">01</span>三件事同時成立</h2>
+    <p>
+      一條帖子要進榜，得同時過三關。順序不是隨便排的：<b>先確認跟這個榜有關</b>，
+      再<b>確認是同人創作而不是科技新聞</b>，最後才看<b>時間</b>。
+    </p>
+
+    <div class="flow">
+      <div class="step">
+        <div class="q">1</div>
+        <div class="a">
+          <h3>認得出是哪個角色</h3>
+          <p>標題、簡介、作者名、標籤裡，得出現八個角色之一的別名。認不出 → 直接丟。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="q">2</div>
+        <div class="a">
+          <h3>是二創，不是技術帖</h3>
+          <p>「手書」「擬人」「表情包」越多越好；「部署」「評測」「顯存」是煞車。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="q">3</div>
+        <div class="a">
+          <h3>還在 7 天內</h3>
+          <p>這是個「現在正在熱」的榜，不是資料庫。太舊的不收。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="box rule">
+      <h3>三關都在 <code>filter_post()</code> 裡，總共 12 行</h3>
+      <p>
+        這段程式碼從 2026-10-21 到現在沒改過。中間所有「好像不太準」的問題，
+        都不是靠加規則解決的，是靠<b>多開幾個入口</b>（見第 05 節）和<b>把弱相關標出來</b>。
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== 2 ========== -->
+  <section>
+    <h2><span class="no">02</span>第一道：認角色</h2>
+    <p>
+      八個角色，每個有一張別名表，寫在 <code>config.json</code> 的
+      <code>characters[].match</code>。命中表裡任何一個詞，就算認出來了。
+    </p>
+
+    <table>
+      <thead><tr><th>角色</th><th>能認出的寫法（舉例）</th></tr></thead>
+      <tbody>
+        <tr><td><b>DeepSeek 娘</b></td><td>deepseek娘 · 大肥魚 · 藍色大肥魚 · 鯨魚娘 · 藍鯨娘</td></tr>
+        <tr><td><b>Claude 娘</b></td><td>claude娘 · 克勞德娘 · claude大小姐</td></tr>
+        <tr><td><b>GPT 娘</b></td><td>gpt娘 · chatgpt娘 · gpt龍娘</td></tr>
+        <tr><td><b>Grok / Gemini / Kimi / 豆包 / 千問</b></td><td>各自「角色名 + 娘」的常見寫法</td></tr>
+      </tbody>
+    </table>
+
+    <h3>繁體也算</h3>
+    <p>
+      每一張表同時收了繁體寫法（<code>藍色大肥魚</code>、<code>鯨魚娘</code>）。
+      B 站標題是簡體，但簡介和作者名常常混著繁體，漏掉一半就等於漏掉一半帖子。
+    </p>
+
+    <h3>兜底：去掉「娘」的字根</h3>
+    <p>
+      還有第二層保險：把搜索詞的「娘」去掉，剩下的字根<b>長度 ≥ 3</b> 才算數。
+      所以 <code>deepseek娘</code> 能兜到 <code>deepseek</code>，
+      但兩三個字的中文詞根不會被拿來亂命中。
+    </p>
+
+    <h3>作者名優先於標題</h3>
+    <p>
+      「Claude大小姐在運營」「ChatGPT龍娘在運營」這類賬號，標題經常一個角色詞都不帶，
+      <b>賬號名才是身份</b>。所以判斷順序是：先看作者名，再看標題和簡介。
+    </p>
+
+    <h3>標籤也算線索</h3>
+    <p>
+      B 站的標籤是 UP 主自己填的，經常比標題更誠實。
+      《完啦完啦！用戶徹底怒了！》標題裡一個角色名都沒有，標籤裡卻寫著「大肥魚」——
+      只看標題，這條 247 萬播放的片子永遠進不來；看了標籤，它就在裡面。
+    </p>
+
+    <div class="box warn">
+      <h3>代價：一條提到兩個角色的，只能歸一個</h3>
+      <p>
+        判斷是「先命中先算」：作者名 → 標題 → 按 <code>config.json</code> 裡的角色順序。
+        DeepSeek 排第一，所以<b>203 條 DeepSeek 裡有一部分其實是「順帶提到」</b>，
+        比如一條「DeepSeek 和 Claude 同框」的影片，會算在 DeepSeek 頭上。
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== 3 ========== -->
+  <section>
+    <h2><span class="no">03</span>第二道：二創，還是技術帖</h2>
+    <p>
+      兩張詞表對撞。左邊是「這是在創作」，右邊是「這是在講技術」：
+    </p>
+
+    <table>
+      <thead><tr><th>詞表</th><th>裡面有什麼</th><th>作用</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>二創詞</b> <small>44 個</small></td>
+          <td>手書、MMD、同人、擬人、立繪、表情包、Q 版、四格、配音、周邊…</td>
+          <td>命中 → 直接判<b>強相關</b></td>
+        </tr>
+        <tr>
+          <td><b>硬技術詞</b> <small>44 個</small></td>
+          <td>教程、評測、跑分、API、顯存、訂閱、裁員、融資、股價…</td>
+          <td>沒二創詞又命中 → <b>丟掉</b></td>
+        </tr>
+        <tr>
+          <td><b>軟技術詞</b> <small>6 個</small></td>
+          <td>部署、安裝、配置、訓練</td>
+          <td>湊夠<b>兩個</b>才丟</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>三種結果</h3>
+    <p>
+      <span class="tag s">強相關</span> 有角色 + 有二創詞 → 收。<br>
+      <span class="tag d">丟掉</span> 有角色 + 沒二創詞 + 命中硬技術詞（或兩個軟詞）→ 這是科技新聞，不是二創。<br>
+      <span class="tag w">相關</span> 有角色 + 兩個都沒有 → 收，但標成「相關」，讓你自己判斷。
+    </p>
+
+    <div class="box rule">
+      <h3>為什麼技術詞要分軟硬</h3>
+      <p>
+        「部署」「安裝」「配置」「訓練」既是技術詞，也是普通動詞。
+        一條叫《當小傻龍在家裡部署了一隻大肥魚》的影片（189 萬播放），
+        按下舊規則會因為「部署」兩個字被當成部署教程丟掉——它是搞笑短劇。
+      </p>
+      <p>
+        所以這四個詞算「軟詞」，要湊夠兩個才生效：
+        <code>部署 + 配置</code> 丟，<code>部署了一隻魚</code> 留。
+        而「教程」「跑分」「顯存」這種一出現就沒懸念的，仍是硬詞，一個就夠。
+      </p>
+    </div>
+
+    <div class="box good">
+      <h3>這一輪的實測：技術帖 0 條漏網</h3>
+      <p>
+        這一輪抓回來的幾百條裡，標題含技術詞的<b>一條都沒進來</b>。剎車是有效的。
+      </p>
+    </div>
+
+    <div class="box bad">
+      <h3>但不能保證下次</h3>
+      <p>
+        規則是「<b>有技術詞、而且沒有二創詞</b>才丟」。兩個都沾的會留下——
+        「大肥魚擬人化部署教程」會被當成二創收進來。
+        這種標題目前沒出現，不代表不會出現。
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== 4 ========== -->
+  <section>
+    <h2><span class="no">04</span>第三道：時間、去重、退場</h2>
+    <p>
+      這裡有兩個不同的「窗口」，很容易混：<b>採集窗口</b>決定抓回來存多少，
+      <b>檢視窗口</b>決定頁面上畫多少。前者 30 天，後者預設 7 天。
+    </p>
+    <table>
+      <thead><tr><th>規則</th><th>怎麼運作</th><th>為什麼</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>採集窗口 30 天</b></td>
+          <td>發布超過 30 天的不收（<code>window_days</code>）</td>
+          <td>要讓「近 30 天」這個檢視有東西可看</td>
+        </tr>
+        <tr>
+          <td><b>檢視窗口 7 / 30 / 全部</b></td>
+          <td>頁面上切換，預設「近 7 天」</td>
+          <td>主榜保持「現在正在熱」；30 天是回頭看，不搶預設</td>
+        </tr>
+        <tr>
+          <td><b>沿用 3 天</b></td>
+          <td>這次沒搜到、但 3 天內見過的，留在榜上</td>
+          <td>不然重新整理一次，東西就莫名消失了</td>
+        </tr>
+        <tr>
+          <td><b>手動釘選</b></td>
+          <td><code>seeds.txt</code> 5 條 + <code>github_seeds</code> 1 條，永久留</td>
+          <td>搜不到的，靠人指定</td>
+        </tr>
+        <tr>
+          <td><b>經典</b> 🏆</td>
+          <td>每個角色按播放量最高的前 6 條，<b>不管多久以前</b></td>
+          <td>400 萬播放的片子大多是幾個月前的，不放寬就永遠看不見</td>
+        </tr>
+        <tr>
+          <td><b>去重</b></td>
+          <td>同一個 BV 號 / 同一個倉庫，只收一次</td>
+          <td>五個入口會撈到同一條</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="box warn">
+      <h3>「7 天」不是嚴格 7 天</h3>
+      <p>
+        榜上總數是：<b>30 天內抓到的</b> ＋ <b>3 天內沒再搜到的</b> ＋ <b>經典</b>。
+        一條 6 天前的帖子，如果這輪沒被搜出來，會退場——即使它還在 7 天裡。
+        這是刻意的取捨：留太久，榜上會堆一批「其實已經沒人看」的東西。
+      </p>
+      <p>
+        榜首那五個數字是<b>即時讀出來的</b>（<code>data/stats.js</code>），
+        不是手抄的——這頁吃過一次「寫死數字」的虧。
+      </p>
+    </div>
+
+    <div class="box rule">
+      <h3>經典為什麼不混進主榜</h3>
+      <p>
+        「經典」是<b>歷史最熱</b>，不是「最近在熱」。一條 51 天前的 277 萬播放，
+        它很有名，但今天沒人在討論它。混進主榜，主榜就變成「歷年名場面回顧」。
+      </p>
+      <p>
+        所以它被單獨標成 🏆，預設不顯示；把時間切到「<b>全部時間</b>」才看得到，
+        排序仍然是播放量，所以最大那幾條會排在最前面。
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== 5 ========== -->
+  <section>
+    <h2><span class="no">05</span>為什麼「相關」也收</h2>
+    <p>
+      榜上大約一半是「相關」——B 站 52%、GitHub 62%。這是個很高的比例，值得解釋。
+    </p>
+    <p>
+      因為 B 站的標題太短。<b>「大肥魚」三個字就是全部信息</b>，
+      你看不出它是手書、是直播切片、還是隨手拍的三秒鐘。
+      這種東西丟掉會漏，留著只是多一條——你一眼就能跳過。
+    </p>
+
+    <table>
+      <thead><tr><th>平台</th><th>強相關 / 相關</th><th>相關裡最冷的那批</th></tr></thead>
+      <tbody>
+        <tr><td>B 站</td><td>大約一半一半</td><td>近百條播放量不到 100（最低 0）</td></tr>
+        <tr><td>GitHub</td><td>三成強、六成弱</td><td>三十幾條 star 不到 5</td></tr>
+      </tbody>
+    </table>
+
+    <div class="quote">
+      【賽博釣魚】釣到一隻大肥魚 · 0 播放 · 「搜尋：大肥魚」<br>
+      練習射箭的大肥魚 · 3 播放 · 「搜尋：大肥魚」
+    </div>
+
+    <p>
+      這些多半是剛發的新號，或者相關推薦輪帶出來的邊角料。
+      看板上有一個 <b>「只看強相關」</b> 按鈕，一鍵把「相關」這一半切掉。
+    </p>
+  </section>
+
+  <!-- ========== 6 ========== -->
+  <section>
+    <h2><span class="no">06</span>五個入口，各自帶著偏見</h2>
+    <p>
+      只靠關鍵詞搜索會漏掉一整類帖子：標題裡根本不寫角色的那些。
+      「人類把一整個 B 站賬號交給 AI」——這種一個角色詞都沒有，但它是這波潮的源頭。
+      所以有五個入口，每個補別人的洞，也各自帶來自己的噪音。
+    </p>
+
+    <table>
+      <thead><tr><th>入口</th><th>大致佔比</th><th>它撈到什麼</th><th>它的偏見</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>關鍵詞搜尋</b> 🔎</td><td>六成</td>
+          <td>標題寫了角色詞的</td>
+          <td>只認標題，漏掉「不寫角色名」的</td>
+        </tr>
+        <tr>
+          <td><b>相關推薦</b> 🕸</td><td>兩成</td>
+          <td>看完 A 之後平台推薦的 B，標題常常不帶角色詞</td>
+          <td>越熱的越容易被推薦，冷門好帖擴散不到</td>
+        </tr>
+        <tr>
+          <td><b>UP 主名</b> 👤</td><td>一成半</td>
+          <td>角色賬號的整條時間線（含你手動點名要盯的那幾個）</td>
+          <td>只對「名字裡有角色」的賬號有效</td>
+        </tr>
+        <tr>
+          <td><b>手動釘選</b> 📌</td><td>個位數</td>
+          <td>你指定的，搜不到也收</td>
+          <td>靠人，不靠機器</td>
+        </tr>
+        <tr>
+          <td><b>GitHub</b> 🐙</td><td>不到一成</td>
+          <td>倉庫（絕大多數靠搜尋、一個手動指定）</td>
+          <td>只有倉庫名／簡介／標籤寫了角色詞的才進得來</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      前四行是 B 站，最後一行是 GitHub——兩邊走不同的接口，分開排。
+      每個入口撈到的帖子，卡片左下角會標出來源（<code>🔎 搜尋</code>、
+      <code>🕸 相關</code>、<code>👤 UP主</code>、<code>📌 手動</code>、<code>🐙 GitHub</code>）。
+      你覺得某類東西太多，可以照著這個標籤判斷是哪個入口放進來的。
+    </p>
+  </section>
+
+  <!-- ========== 7 ========== -->
+  <section>
+    <h2><span class="no">07</span>兩個平台，兩把不同的尺</h2>
+    <p>
+      B 站的「熱度」是<b>播放量</b>，GitHub 的「熱度」是 <b>star 數</b>。
+      這兩個數字沒有可比性：291 萬播放和 361 個 star 放在一起排，是在騙自己。
+    </p>
+    <p>
+      所以看板上只有<b>分平台排</b>，沒有總榜。切換平台，等於換一把尺。
+      你看到的「第 1 名」，永遠是「這個平台裡的第 1 名」。
+    </p>
+    <div class="box rule">
+      <h3>也不給「質量分」</h3>
+      <p>
+        隔壁的 AI 影像雷達在後台有一個 0–100 的排序分，但從不顯示在頁面上——
+        它是在 52 條樣本上手調的，對外宣稱就是宣稱一個還沒有的權威。這裡同理。
+        頁面上只給：平台原始指標、強／弱相關、發布時間。
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== 8 ========== -->
+  <section>
+    <h2><span class="no">08</span>已知會錯在哪</h2>
+    <p>這幾條不是假設，是這一輪的資料裡看得到的。</p>
+
+    <h3>① 角色歸錯</h3>
+    <p>
+      多角色同框的帖子會被歸給「先命中」的那個。DeepSeek 這一欄的三百多條裡，
+      有一部分實際上是「DeepSeek + Claude 同框」。
+    </p>
+
+    <h3>② 弱相關的噪音</h3>
+    <p>
+      B 站有近百條播放低於 100 的「相關」帖，還有幾條播放是 0。
+      GitHub 有三十幾條 star 少於 5 的。它們大多不是好內容，只是「標題或標籤裡有那個詞」。
+    </p>
+
+    <h3>③ 放寬標籤之後，噪音也跟著漲</h3>
+    <p>
+      2026-10-25 把標籤加進判斷依據，<b>當天</b> B 站從 237 條漲到 357 條——
+      撈到了 45 萬播放的《已深度想你》、247 萬的《完啦完啦！用戶徹底怒了！》，
+      但低於 100 播放的弱相關也從 23 條漲到 56 條。
+      <b>recall 和 precision 在這裡是直接對賭的</b>，這也是準確率抽測非做不可的原因。
+    </p>
+
+    <h3>④ 「deepseek」這個詞太常見</h3>
+    <p>
+      兜底規則會讓任何標題帶 <code>deepseek</code> 的帖子命中角色。
+      這一輪沒有技術帖漏進來，但這是<b>噪音的主要來源</b>——
+      一條「DeepSeek 崩了怎麼辦」也會被認成角色相關。
+    </p>
+
+    <h3>⑤ 摘要多半是空的</h3>
+    <p>
+      大約四分之一的條目沒有簡介（或只有一個「-」）。
+      B 站很多 UP 主不寫簡介，卡片上就只剩標題。
+    </p>
+
+    <h3>⑥ 相關推薦的迴音室</h3>
+    <p>
+      相關推薦是「順著有熱度的東西往外爬」，所以越熱的越容易被撈到，
+      冷門但好的東西反而進不來。這是這個入口的結構性偏差，不是參數能調好的。
+    </p>
+
+    <h3>⑦ 邊界沒定</h3>
+    <p>
+      直播切片、真人 cos、AI 生成的「偽二創」、純語音 cover——
+      這幾類現在是按「有沒有二創詞」自然進來的，沒有專門判斷。
+      所以同類東西有時候進、有時候不進。
+    </p>
+  </section>
+
+  <!-- ========== 9 ========== -->
+  <section>
+    <h2><span class="no">09</span>準確率：現在是空的</h2>
+    <p>
+      這頁沒有寫「準確率 92%」之類的數字，因為<b>沒測過</b>。
+      寫一個沒測過的數字，比不寫更糟。
+    </p>
+
+    <div class="box bad">
+      <h3>隔壁專案剛吃過這個虧</h3>
+      <p>
+        AI 影像雷達的分類器，在 52 條「自己標的」調參集上是 <b>98%</b>。
+        另外標了 142 條 held-out 之後，凍結規則只剩 <b>69.7%</b>。
+        差的那 28 個百分點，就是「自己出題自己考」的代價。
+      </p>
+    </div>
+
+    <h3>怎麼把這個數字填上</h3>
+    <ul>
+      <li><b>抽樣</b>：從榜上隨機抽 50 條（不是挑看著順眼的）。</li>
+      <li><b>人工標</b>：每條標「該收」或「不該收」，只有兩個選項，不給「拿不準」。</li>
+      <li><b>算 precision</b>：該收的 ÷ 50。這回答的是「榜上有多少是垃圾」。</li>
+      <li><b>算 recall</b>：用 <code>seeds.txt</code> 那 4 條當基準——它們是「一定要收到」的。
+          這回答的是「好東西漏了多少」。</li>
+    </ul>
+
+    <p>
+      預期風險集中在「相關」那一半；「強相關」那一半大概靠譜，但沒驗過就是沒驗過。
+      測完之後，這一節會換成兩個真實的數字，以及標錯的具體例子。
+    </p>
+  </section>
+
+  <!-- ========== 10 ========== -->
+  <section>
+    <h2><span class="no">10</span>這份榜單不做什麼</h2>
+    <ul>
+      <li><b>不搬圖片</b>——封面是原平台的外鏈，版權歸原作者，點進去才是原帖。</li>
+      <li><b>不放假數據</b>——小紅書、推特、小黑盒沒接入，按鈕是灰的，欄位裡寫的是原因。</li>
+      <li><b>不做總榜</b>——兩個平台的熱度單位不同，混在一起排沒有意義。</li>
+      <li><b>不給質量分</b>——沒有對外驗證過的評分，不假裝有。</li>
+      <li><b>不用 iframe</b>——推廣位只做新開分頁的普通超連結。</li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>這頁是照著 <code>collect.py</code> 的實際規則寫的，不是理想設計。</span>
+    <span>資料截至 2026-10-25 12:07</span>
+  </footer>
+</div>
+
+<script src="data/i18n.js"></script>
+<script src="data/stats.js"></script>
+<script>
+(function(){
+  "use strict";
+  var T2S = (window.FISH_I18N && window.FISH_I18N.t2s) || {};
+  var nodes = [];
+  var lang = "t", theme = "dark";
+
+  try {
+    if (localStorage.getItem("fish-lang") === "s") lang = "s";
+    var th = localStorage.getItem("fish-theme");
+    if (th === "light" || th === "dark") theme = th;
+  } catch(e) {}
+
+  function toS(s){
+    var out = "";
+    for (var i = 0; i < s.length; i++) out += (T2S[s[i]] || s[i]);
+    return out;
+  }
+
+  // 收集所有文字節點，記住原文，之後才能切回去
+  function collect(node){
+    for (var i = 0; i < node.childNodes.length; i++){
+      var n = node.childNodes[i];
+      if (n.nodeType === 3){
+        if (n.nodeValue && n.nodeValue.trim()) nodes.push({n: n, orig: n.nodeValue});
+      } else if (n.nodeType === 1 && !/^(SCRIPT|STYLE|CODE)$/.test(n.tagName)){
+        collect(n);
+      }
+    }
+  }
+  collect(document.body);
+
+  // 數字條：優先讀 collect.py 寫的 data/stats.js；讀不到就留在「—」，不編數字。
+  (function fillStats(){
+    var S = window.FISH_STATS;
+    if(!S) return;
+    var put = function(id, val){
+      var el = document.getElementById(id);
+      if(el && val !== undefined && val !== null) el.textContent = val;
+    };
+    put("st-total", S.total);
+    put("st-strong", S.strong);
+    put("st-weak", S.weak);
+    put("st-classic", S.classic);
+    var w = document.getElementById("st-window");
+    if(w && S.window_days){ w.innerHTML = S.window_days + '<small>天</small>'; }
+  })();
+
+  function applyLang(){
+    for (var i = 0; i < nodes.length; i++){
+      var o = nodes[i];
+      o.n.nodeValue = (lang === "s") ? toS(o.orig) : o.orig;
+    }
+    document.getElementById("langBtn").textContent = (lang === "s") ? "简" : "繁";
+    document.getElementById("langBtn").title = (lang === "s") ? "切換到繁體" : "切換到简体";
+    document.documentElement.setAttribute("lang", lang === "s" ? "zh-Hans" : "zh-Hant");
+  }
+
+  function applyTheme(){
+    document.body.setAttribute("data-theme", theme);
+    document.getElementById("themeBtn").textContent = theme === "light" ? "🌙" : "☀️";
+    document.getElementById("themeBtn").title = theme === "light" ? "切換到深色" : "切換到淺色";
+  }
+
+  document.getElementById("langBtn").addEventListener("click", function(){
+    lang = (lang === "s") ? "t" : "s";
+    applyLang();
+    try { localStorage.setItem("fish-lang", lang); } catch(e) {}
+  });
+  document.getElementById("themeBtn").addEventListener("click", function(){
+    theme = (theme === "light") ? "dark" : "light";
+    applyTheme();
+    try { localStorage.setItem("fish-theme", theme); } catch(e) {}
+  });
+
+  applyLang();
+  applyTheme();
+})();
+</script>
+</body>
+</html>

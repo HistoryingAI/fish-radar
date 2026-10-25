@@ -1,0 +1,1200 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>肥魚雷達 · FISH RADAR — AI 娘二創全網熱帖聚合</title>
+<meta name="description" content="把 B 站、GitHub 上關於 DeepSeek 娘、Claude 娘、GPT 娘等 AI 娘的二次創作熱帖聚合到一頁。只存標題、作者、熱度與原帖連結，點擊回原帖。">
+<meta name="theme-color" content="#070d18">
+<!-- 分享卡片。上線後要把 og:image 改成絕對網址，微信／B 站只抓絕對地址 -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="肥魚雷達 FISH RADAR — AI 娘二創全網熱帖聚合">
+<meta property="og:description" content="B 站 + GitHub 的 AI 娘二創熱帖，分平台排序，每條都連回原帖。">
+<meta property="og:image" content="og-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="og-cover.jpg">
+<style>
+  :root{
+    --bg:#070d18;
+    --bg2:#0c1626;
+    --card:#101d31;
+    --card2:#152540;
+    --line:rgba(120,180,255,.14);
+    --txt:#e8f1ff;
+    --dim:#8ba3c7;
+    --dim2:#5f7699;
+    --accent:#4cc9f0;
+    --accent2:#3a86ff;
+    --hot:#ff7a45;
+    --ok:#3ddc97;
+    --no:#6b7c99;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"PingFang TC","Microsoft JhengHei","Noto Sans TC",system-ui,-apple-system,"Segoe UI",sans-serif;
+    background:
+      radial-gradient(900px 500px at 12% -8%, rgba(58,134,255,.18), transparent 60%),
+      radial-gradient(700px 420px at 92% 4%, rgba(76,201,240,.12), transparent 55%),
+      var(--bg);
+    color:var(--txt);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:linear-gradient(rgba(120,180,255,.045) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(120,180,255,.045) 1px,transparent 1px);
+    background-size:44px 44px;
+    mask-image:radial-gradient(circle at 50% 0%,#000 0%,transparent 72%);
+  }
+  .wrap{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:26px 20px 70px}
+
+  /* ---------- 顶部 ---------- */
+  header{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:18px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{
+    width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font-size:28px;
+    background:linear-gradient(145deg,#1b3a63,#0d1f38);
+    border:1px solid rgba(120,190,255,.28);
+    box-shadow:0 8px 30px rgba(20,90,180,.35), inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  h1{margin:0;font-size:26px;letter-spacing:.5px;font-weight:800}
+  h1 span{color:var(--accent);font-weight:700}
+  .sub{margin:5px 0 0;color:var(--dim);font-size:13px;letter-spacing:.3px}
+  .mlink{
+    display:inline-block;margin-top:7px;font-size:11.5px;color:var(--dim2);
+    border-bottom:1px dashed rgba(120,180,255,.32);padding-bottom:1px;letter-spacing:.2px
+  }
+  .mlink:hover{color:var(--accent);text-decoration:none;border-bottom-color:var(--accent)}
+  .stamp{
+    text-align:right;font-size:12px;color:var(--dim2);line-height:1.7;
+    border-left:1px solid var(--line);padding-left:16px;
+  }
+  .stamp b{color:var(--txt);font-weight:600}
+
+  /* ---------- 诚实横幅 ---------- */
+  .notice{
+    display:flex;gap:11px;align-items:flex-start;
+    background:linear-gradient(90deg,rgba(255,170,60,.10),rgba(255,170,60,.03));
+    border:1px solid rgba(255,180,80,.28);
+    border-radius:12px;padding:11px 14px;font-size:12.5px;line-height:1.65;color:#ffd9a8;
+    margin-bottom:20px;
+  }
+  .notice b{color:#ffb84d}
+  .notice .i{font-size:15px;line-height:1.3}
+
+  /* ---------- 控制台 ---------- */
+  .console{
+    background:linear-gradient(180deg,rgba(20,36,60,.92),rgba(13,24,41,.92));
+    border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:16px;
+    box-shadow:0 18px 50px rgba(0,0,0,.35);
+  }
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .row + .row{margin-top:11px;padding-top:11px;border-top:1px dashed rgba(120,180,255,.12)}
+  .lbl{font-size:11px;color:var(--dim2);letter-spacing:2px;min-width:44px;text-transform:uppercase}
+
+  .chip{
+    border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--dim);
+    padding:7px 13px;border-radius:999px;font-size:13px;cursor:pointer;
+    transition:.16s;user-select:none;white-space:nowrap;font-family:inherit;
+  }
+  .chip:hover{background:rgba(76,201,240,.10);color:var(--txt);border-color:rgba(76,201,240,.35)}
+  .chip.on{
+    background:linear-gradient(135deg,rgba(58,134,255,.9),rgba(76,201,240,.75));
+    color:#04101f;border-color:transparent;font-weight:700;
+    box-shadow:0 4px 16px rgba(58,134,255,.35);
+  }
+  .chip .n{opacity:.62;font-size:11px;margin-left:5px}
+
+  .spacer{flex:1}
+  .toggle{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .toggle button{
+    background:transparent;border:0;color:var(--dim);font-family:inherit;font-size:12.5px;
+    padding:7px 14px;cursor:pointer;transition:.15s
+  }
+  .toggle button.on{background:rgba(76,201,240,.16);color:var(--accent);font-weight:600}
+
+  /* ---------- 状态条 ---------- */
+  .stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .stat{
+    flex:1;min-width:150px;background:rgba(255,255,255,.025);border:1px solid var(--line);
+    border-radius:11px;padding:10px 13px
+  }
+  .stat .k{font-size:11px;color:var(--dim2);letter-spacing:1px}
+  .stat .v{font-size:19px;font-weight:800;margin-top:2px}
+  .stat .v small{font-size:11px;color:var(--dim2);font-weight:500;margin-left:4px}
+  .stat.off{opacity:.5}
+  .loadhint{
+    font-size:11.5px;color:var(--dim2);margin:-8px 0 14px;min-height:16px;letter-spacing:.3px
+  }
+  .loadhint b{color:var(--accent);font-weight:600}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .dot.g{background:var(--ok);box-shadow:0 0 10px var(--ok)}
+  .dot.o{background:#ffb84d;box-shadow:0 0 10px #ffb84d}
+  .dot.r{background:var(--no)}
+
+  /* ---------- 卡片流 ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:14px}
+  .card{
+    background:linear-gradient(180deg,var(--card),var(--card2));
+    border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;
+    transition:transform .18s,box-shadow .18s,border-color .18s;display:flex;flex-direction:column;
+  }
+  .card:hover{transform:translateY(-3px);border-color:rgba(76,201,240,.4);box-shadow:0 16px 34px rgba(0,0,0,.45)}
+  .thumb{
+    height:132px;position:relative;
+    background:linear-gradient(135deg,#16304f,#0b1a2e);
+    display:grid;place-items:center;font-size:34px;overflow:hidden;
+  }
+  .thumb .ph{position:absolute;inset:0;display:grid;place-items:center;font-size:40px;opacity:.22}
+  .thumb img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;display:block}
+  .badge{
+    position:absolute;top:9px;left:9px;z-index:2;font-size:10.5px;padding:3px 9px;border-radius:6px;
+    font-weight:700;letter-spacing:.4px;backdrop-filter:blur(6px)
+  }
+  .b-bilibili{background:rgba(251,114,153,.88);color:#2b0512}
+  .b-github{background:rgba(215,225,240,.9);color:#0b1626}
+  .b-xhs{background:rgba(255,45,85,.9);color:#fff}
+  .b-twitter{background:rgba(29,161,242,.9);color:#fff}
+  .b-heybox{background:rgba(255,196,0,.9);color:#231a00}
+  .rel{
+    position:absolute;top:9px;right:9px;z-index:2;font-size:10px;padding:3px 8px;border-radius:6px;
+    background:rgba(0,0,0,.55);color:#9fd9ff;border:1px solid rgba(120,200,255,.3)
+  }
+  .body{padding:12px 13px 13px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .title{
+    font-size:14px;line-height:1.5;font-weight:600;margin:0;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden
+  }
+  .meta{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--dim2);flex-wrap:wrap}
+  .who{color:var(--dim);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .foot{
+    margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding-top:9px;border-top:1px solid rgba(120,180,255,.1)
+  }
+  .heat{font-size:13px;font-weight:700;color:var(--hot);display:flex;align-items:center;gap:6px}
+  .delta{font-size:10.5px;padding:2px 6px;border-radius:5px;font-weight:600}
+  .d-new{background:rgba(61,220,151,.16);color:var(--ok)}
+  .d-up{background:rgba(255,122,69,.16);color:var(--hot)}
+  .d-down{background:rgba(120,140,170,.18);color:var(--dim2)}
+  .go{
+    font-size:11.5px;color:var(--accent);text-decoration:none;border:1px solid rgba(76,201,240,.3);
+    padding:4px 10px;border-radius:7px;transition:.15s;white-space:nowrap
+  }
+  .go:hover{background:rgba(76,201,240,.14)}
+
+  /* ---------- 分平台榜 ---------- */
+  .cols{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+  @media(max-width:1180px){.cols{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:720px){.cols{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
+  .col{background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:13px;padding:11px}
+  .col-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .col-h .nm{font-size:13px;font-weight:700}
+  .col-h .ct{font-size:10.5px;color:var(--dim2)}
+  .mini{
+    display:flex;gap:9px;padding:8px 6px;border-radius:9px;cursor:pointer;transition:.15s;
+    text-decoration:none;color:inherit
+  }
+  .mini:hover{background:rgba(76,201,240,.08)}
+  .mini .rk{font-size:11px;color:var(--dim2);font-weight:800;width:15px;flex:none;padding-top:2px}
+  .mini .t{font-size:12px;line-height:1.45;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .mini .h{font-size:10.5px;color:var(--hot);margin-top:3px}
+  .emptycol{padding:26px 8px;text-align:center;color:var(--dim2);font-size:11.5px;line-height:1.7}
+
+  /* ---------- 弹窗 ---------- */
+  .mask{
+    position:fixed;inset:0;background:rgba(3,8,16,.78);backdrop-filter:blur(5px);
+    display:none;place-items:center;z-index:50;padding:20px
+  }
+  .mask.on{display:grid}
+  .modal{
+    width:min(640px,100%);max-height:86vh;overflow:auto;background:linear-gradient(180deg,#13233c,#0b1729);
+    border:1px solid rgba(120,190,255,.24);border-radius:18px;
+    box-shadow:0 30px 80px rgba(0,0,0,.7)
+  }
+  .modal-h{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:18px 20px 12px}
+  .modal-h h3{margin:0;font-size:17px;line-height:1.5}
+  .x{background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--dim);
+     width:30px;height:30px;border-radius:9px;cursor:pointer;font-size:15px;flex:none;font-family:inherit}
+  .x:hover{color:#fff;background:rgba(255,255,255,.12)}
+  .modal-b{padding:0 20px 20px}
+  .kv{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0 14px}
+  .kv td{padding:7px 0;border-bottom:1px solid rgba(120,180,255,.09);vertical-align:top}
+  .kv td:first-child{color:var(--dim2);width:96px;white-space:nowrap}
+  .why{background:rgba(76,201,240,.07);border-left:3px solid var(--accent);padding:10px 13px;border-radius:0 9px 9px 0;font-size:12.5px;line-height:1.75;color:#c8e4ff}
+  .act{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+  .btn{
+    display:inline-block;text-decoration:none;font-size:13px;padding:9px 20px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent2),var(--accent));color:#04101f;font-weight:700;
+    border:0;cursor:pointer;font-family:inherit
+  }
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--dim)}
+  .btn.ghost:hover{color:#fff}
+
+  /* ---------- 页脚 ---------- */
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--dim2);line-height:1.9}
+  footer b{color:var(--dim)}
+  footer code{background:rgba(255,255,255,.06);padding:1px 6px;border-radius:5px;font-size:11px;color:#9fd9ff}
+  .fnote{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:16px}
+  .fnote h4{margin:0 0 5px;font-size:12px;color:var(--dim);letter-spacing:.5px}
+
+  /* ---------- 右上角两个开关 ---------- */
+  .ctrl{display:flex;gap:8px;align-items:center}
+  .navbtn{
+    width:38px;height:38px;border-radius:11px;cursor:pointer;font-family:inherit;
+    background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--dim);
+    font-size:14px;font-weight:700;transition:.15s;display:grid;place-items:center
+  }
+  .navbtn:hover{color:var(--txt);border-color:rgba(76,201,240,.4);background:rgba(76,201,240,.1)}
+
+  /* ---------- 加载更多 ---------- */
+  .pager{
+    grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:11px;
+    padding:30px 0 14px
+  }
+  .pager .cnt{font-size:12px;color:var(--dim2);letter-spacing:.5px}
+  .pager .more{
+    font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
+    padding:11px 30px;border-radius:11px;color:#04101f;
+    background:linear-gradient(135deg,var(--accent2),var(--accent));
+    border:0;box-shadow:0 6px 20px rgba(58,134,255,.28);transition:.16s
+  }
+  .pager .more:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(58,134,255,.4)}
+  .pager .more:active{transform:translateY(0)}
+
+  /* ---------- 浅色主题 ---------- */
+  body[data-theme="light"]{
+    --bg:#eef3fa; --bg2:#e7eef8; --card:#ffffff; --card2:#f6f9fe;
+    --line:rgba(24,64,120,.14); --txt:#0d1b2e; --dim:#41597a; --dim2:#6d82a1;
+    --accent:#1868bb; --accent2:#2f7fe0; --hot:#d1450b; --ok:#0d8f4f; --no:#9aa9bd;
+    background:
+      radial-gradient(900px 500px at 12% -8%, rgba(58,134,255,.10), transparent 60%),
+      radial-gradient(700px 420px at 92% 4%, rgba(76,201,240,.10), transparent 55%),
+      var(--bg);
+  }
+  body[data-theme="light"]::before{
+    background-image:linear-gradient(rgba(30,70,130,.055) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(30,70,130,.055) 1px,transparent 1px);
+  }
+  body[data-theme="light"] .console{background:linear-gradient(180deg,#ffffff,#f2f7fe)}
+  body[data-theme="light"] .card{background:linear-gradient(180deg,#ffffff,#f7fafe)}
+  body[data-theme="light"] .card:hover{box-shadow:0 16px 34px rgba(30,70,130,.14)}
+  body[data-theme="light"] .thumb{background:linear-gradient(135deg,#e6eefb,#d9e5f6)}
+  body[data-theme="light"] .chip{background:rgba(20,60,110,.045)}
+  body[data-theme="light"] .chip.on{color:#fff}
+  body[data-theme="light"] .mini:hover{background:rgba(30,110,200,.07)}
+  body[data-theme="light"] .modal{background:linear-gradient(180deg,#ffffff,#f5f9ff)}
+  body[data-theme="light"] .mask{background:rgba(232,240,250,.82)}
+  body[data-theme="light"] .why{background:rgba(30,110,200,.07);color:#1c3a5e}
+  body[data-theme="light"] .btn{color:#fff}
+  body[data-theme="light"] .rel{background:rgba(255,255,255,.8);color:#1a5a9e;border-color:rgba(30,110,200,.28)}
+  body[data-theme="light"] .pager .more{color:#fff}
+  body[data-theme="light"] .notice{
+    background:linear-gradient(90deg,rgba(255,168,60,.20),rgba(255,168,60,.07));
+    border-color:rgba(196,126,16,.40); color:#6b4408;
+  }
+  body[data-theme="light"] .notice b{color:#95530a}
+  body[data-theme="light"] .stat{background:rgba(20,60,110,.032)}
+  body[data-theme="light"] .col{background:rgba(20,60,110,.025)}
+  body[data-theme="light"] .kv td{border-bottom-color:rgba(24,64,120,.10)}
+  body[data-theme="light"] .navbtn{background:rgba(20,60,110,.05)}
+
+  /* ---------- 推广位 ---------- */
+  .promos{margin:0 0 18px}
+  .promos:empty{display:none}
+  .promo{
+    display:flex;align-items:stretch;overflow:hidden;position:relative;
+    border:1px solid rgba(120,190,255,.22);border-radius:16px;text-decoration:none;color:inherit;
+    background:linear-gradient(100deg,#0e1e36,#12294a 58%,#17385f);
+    transition:transform .18s,box-shadow .18s,border-color .18s;
+  }
+  .promo:hover{transform:translateY(-2px);border-color:rgba(76,201,240,.5);box-shadow:0 16px 34px rgba(0,0,0,.4)}
+  .promo-txt{flex:1;min-width:0;padding:16px 20px;display:flex;flex-direction:column;gap:7px}
+  .promo-tag{
+    align-self:flex-start;font-size:10.5px;letter-spacing:1px;padding:3px 9px;border-radius:6px;
+    background:rgba(76,201,240,.14);color:#8fd8f5;border:1px solid rgba(76,201,240,.3)
+  }
+  .promo h3{margin:0;font-size:17px;font-weight:800;letter-spacing:.3px}
+  .promo p{margin:0;font-size:12.5px;line-height:1.65;color:var(--dim)}
+  .promo-btn{
+    margin-top:auto;align-self:flex-start;font-size:13px;font-weight:700;
+    padding:8px 16px;border-radius:9px;color:#04101f;
+    background:linear-gradient(135deg,var(--accent2),var(--accent))
+  }
+  .promo-src{font-size:11px;color:var(--dim2)}
+  .promo-img{width:300px;flex:none;background:#0a1525}
+  .promo-img img{width:100%;height:100%;object-fit:cover;display:block}
+  @media(max-width:760px){
+    .promo{flex-direction:column-reverse}
+    .promo-img{width:100%;height:150px}
+  }
+  body[data-theme="light"] .promo{
+    background:linear-gradient(100deg,#ffffff,#eef5ff 58%,#e3eefb);
+    border-color:rgba(24,64,120,.16)
+  }
+  body[data-theme="light"] .promo-btn{color:#fff}
+  body[data-theme="light"] .promo-tag{background:rgba(24,110,190,.10);color:#1a6fbf;border-color:rgba(24,110,190,.28)}
+
+  /* ---------- 搜尋框 ---------- */
+  .search{
+    position:relative;flex:1;min-width:220px;max-width:520px;display:flex;align-items:center;
+    background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:11px;
+    padding:0 34px 0 32px;height:38px;transition:.15s
+  }
+  .search:focus-within{border-color:rgba(76,201,240,.55);background:rgba(76,201,240,.06);box-shadow:0 0 0 3px rgba(76,201,240,.10)}
+  .search .sicon{position:absolute;left:11px;font-size:12px;opacity:.5;pointer-events:none}
+  .search input{
+    flex:1;background:transparent;border:0;outline:0;color:var(--txt);font-family:inherit;
+    font-size:13px;height:100%;min-width:0
+  }
+  .search input::placeholder{color:var(--dim2)}
+  .search input::-webkit-search-cancel-button{display:none}
+  .search .qclear{
+    position:absolute;right:8px;width:22px;height:22px;border-radius:6px;border:0;cursor:pointer;
+    background:rgba(255,255,255,.07);color:var(--dim);font-size:11px;display:none;place-items:center;
+    font-family:inherit
+  }
+  .search.has .qclear{display:grid}
+  .search .qclear:hover{color:#fff;background:rgba(255,255,255,.14)}
+  .keyhint{
+    position:absolute;right:10px;font-size:10px;color:var(--dim2);border:1px solid var(--line);
+    border-radius:5px;padding:1px 5px;pointer-events:none
+  }
+  .search.has .keyhint{display:none}
+
+  /* ---------- 数据过旧提醒 ---------- */
+  .stale{
+    display:none;margin:-8px 0 16px;padding:11px 15px;border-radius:11px;font-size:12.5px;line-height:1.7;
+    background:linear-gradient(90deg,rgba(255,196,0,.14),rgba(255,196,0,.04));
+    border:1px solid rgba(255,196,0,.38);color:#ffe08a
+  }
+  .stale.warn{
+    background:linear-gradient(90deg,rgba(255,110,60,.16),rgba(255,110,60,.04));
+    border-color:rgba(255,110,60,.45);color:#ffb9a0
+  }
+  .stale b{color:#fff;font-weight:700}
+  .stale .stale-t{color:var(--dim2);margin-left:8px;font-size:11.5px}
+  .stamp.old b{color:#ffc400}
+  .stamp.veryold b{color:#ff7a45}
+
+  /* ---------- 卡片来源小标 ---------- */
+  .src{
+    font-size:10.5px;padding:1px 6px;border-radius:5px;white-space:nowrap;
+    background:rgba(120,180,255,.10);color:#8fb8dd;border:1px solid rgba(120,180,255,.16)
+  }
+  /* 經典：历史最热，不受 7 天窗口限制 */
+  .cl{
+    font-size:10.5px;padding:1px 6px;border-radius:5px;white-space:nowrap;
+    background:rgba(230,180,92,.13);color:#e6b45c;border:1px solid rgba(230,180,92,.3)
+  }
+  body[data-theme="light"] .cl{background:rgba(180,120,20,.10);color:#8a5a05;border-color:rgba(180,120,20,.28)}
+  body[data-theme="light"] .src{background:rgba(24,110,190,.08);color:#2a6398;border-color:rgba(24,110,190,.18)}
+  body[data-theme="light"] .stale{color:#7a5200;border-color:rgba(196,140,0,.4)}
+  body[data-theme="light"] .stale b{color:#4a3200}
+  body[data-theme="light"] .search{background:rgba(20,60,110,.035)}
+  .linkbtn{
+    background:none;border:0;color:var(--accent);font-family:inherit;font-size:12.5px;
+    cursor:pointer;text-decoration:underline;padding:0
+  }
+  .linkbtn:hover{color:#8fd8f5}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="logo">🐋</div>
+      <div>
+        <h1>肥魚雷達 <span>FISH RADAR</span></h1>
+        <p class="sub">AI 娘二創 · 全網熱帖聚合 · 每一條都連回原帖</p>
+        <a class="mlink" href="method.html">分類方法 · 它會錯在哪 →</a>
+      </div>
+    </div>
+    <div class="ctrl">
+      <button class="navbtn" id="langBtn" title="切換簡體／繁體">繁</button>
+      <button class="navbtn" id="themeBtn" title="切換深色／淺色">☀️</button>
+    </div>
+    <div class="stamp">
+      最後抓取 <b id="stamp">—</b><br>
+      採集窗口 <b id="window">—</b> · 耗時 <b id="took">—</b>
+    </div>
+  </header>
+  <!-- 推廣位：内容来自 promos.js，都是 target="_blank" 的普通超链接，没有 iframe -->
+  <section class="promos" id="promo"></section>
+
+  <div class="notice" id="notice">
+    <span class="i">⚠️</span>
+    <span>
+      <b>目前只真的抓了 B 站和 GitHub。</b>
+      小紅書、推特、小黑盒這三個平台的按鈕是灰的——它們需要登錄態或動態簽名，這一版<strong>沒有</strong>接，也沒有拿假數據去填。
+      灰掉的欄位裡寫的是原因，不是演示內容。
+    </span>
+  </div>
+
+  <section class="console">
+    <div class="row">
+      <div class="search" id="qbox">
+        <span class="sicon">🔍</span>
+        <input id="q" type="search" autocomplete="off" spellcheck="false"
+               placeholder="搜尋標題、作者、來源…（多個關鍵詞用空格隔開，按 / 聚焦）">
+        <span class="keyhint">/</span>
+        <button class="qclear" id="qclear" type="button" title="清空搜尋">✕</button>
+      </div>
+      <span class="spacer"></span>
+      <span class="lbl">排序</span>
+      <div class="toggle" id="sort">
+        <button data-s="heat" class="on">熱度</button>
+        <button data-s="new">最新</button>
+        <button data-s="delta">漲幅</button>
+      </div>
+    </div>
+    <div class="row">
+      <span class="lbl">角色</span>
+      <div id="chars" class="row" style="gap:8px"></div>
+    </div>
+    <div class="row">
+      <span class="lbl">平台</span>
+      <div id="plats" class="row" style="gap:8px"></div>
+      <span class="spacer"></span>
+      <div class="toggle" id="when">
+        <button data-d="1">今日 24h</button>
+        <button data-d="7" class="on">近 7 天</button>
+        <button data-d="30">近 30 天</button>
+        <button data-d="0">全部時間</button>
+      </div>
+      <div class="toggle" id="rel">
+        <button data-r="weak" class="on">全部相關</button>
+        <button data-r="strong">只看強相關</button>
+      </div>
+      <div class="toggle" id="view">
+        <button data-v="flow" class="on">卡片流</button>
+        <button data-v="cols">分平台榜</button>
+      </div>
+      <button class="chip" id="csv" title="把目前篩選出來的結果存成 Excel 能開的檔案">⬇ 導出 CSV</button>
+    </div>
+  </section>
+
+  <div class="loadhint" id="loadhint"></div>
+
+  <div class="stale" id="stale"></div>
+
+  <section class="stats" id="stats"></section>
+
+  <section id="flow" class="grid"></section>
+  <section id="cols" class="cols" style="display:none"></section>
+
+  <footer>
+    <div class="fnote">
+      <div>
+        <h4>這些數字是真的嗎</h4>
+        B 站的播放／彈幕／收藏、GitHub 的 Star／Fork，都是抓取當下接口回傳的原值，沒有加權、沒有換算、沒有編造。
+        兩個平台的熱度<strong>不能互相關公比大小</strong>，所以只分平台排，不做總榜。
+      </div>
+      <div>
+        <h4>數據怎麼更新</h4>
+        雙擊資料夾裡的 <code>更新數據.bat</code>，等一分鐘，再重新整理這一頁就行。
+        想讓它每天自己跑，把整個資料夾丟上 GitHub，用免費的 Actions 定時執行（說明見 <code>README.txt</code>）。
+      </div>
+      <div>
+        <h4>版權</h4>
+        這裡只存標題、作者、熱度和原帖連結，<strong>不搬運任何圖片本體</strong>。封面圖是原平台的外鏈，版權歸原作者。
+        點卡片右下角「開啟原帖」回去按讚，才是對創作者最好的支持。
+      </div>
+    </div>
+    <div>
+      肥魚雷達 FISH RADAR · 開源 · 非官方 · 與任何模型廠商無關 ·
+      篩選規則：命中角色詞 → 排除純技術詞 → 保留二創內容
+    </div>
+    <div style="margin-top:10px;font-size:11.5px;color:#4f6485;line-height:1.8">
+      免責聲明：本站為非官方的自動聚合索引，不屬於任何模型廠商或平台。
+      所有標題、作者、熱度數據的版權歸原平台與原作者；本站不儲存、不搬運任何影音或圖片本體，僅提供指向原帖的連結。
+      收錄不代表背書，若原作者不希望被收錄，告知即可移除。數據可能存在延遲、遺漏或誤判，請以原帖為準。
+    </div>
+  </footer>
+</div>
+
+<div class="mask" id="mask">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script src="data/i18n.js"></script>
+<script src="promos.js"></script>
+<script src="data/posts_top.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  // 首屏只拿 30 条（约 25KB），先让页面立刻画出来；
+  // 其余几百条在首屏画完之后再异步补上来。
+  var DATA = window.FISH_RADAR_TOP || null;
+  var REST_LOADED = false;
+  var REST_FAILED = false;
+  var PLAT = {
+    bilibili:    {name:"B 站",      cls:"b-bilibili", icon:"📺", live:true},
+    github:      {name:"GitHub",    cls:"b-github",   icon:"🐙", live:true},
+    xiaohongshu: {name:"小紅書",     cls:"b-xhs",      icon:"📕", live:false},
+    twitter:     {name:"推特 X",     cls:"b-twitter",  icon:"🐦", live:false},
+    heybox:      {name:"小黑盒",     cls:"b-heybox",   icon:"🎮", live:false}
+  };
+  var CHARNAME = {};
+  (function(){
+    var days = [["deepseek","DeepSeek 娘","🐋"],["claude","Claude 娘","🅒"],["gpt","GPT 娘","🤖"],
+                ["grok","Grok 娘","⚡"],["gemini","Gemini 娘","✨"],["kimi","Kimi 娘","🌙"],
+                ["doubao","豆包娘","🫧"],["qwen","千問娘","☁️"],["other","其他","🌀"]];
+    days.forEach(function(d){ CHARNAME[d[0]] = {name:d[1], icon:d[2]}; });
+  })();
+
+  var PAGE_SIZE = 20;   // 一次显示 20 条（宽屏正好 4 列 × 5 行）
+
+  var state = {
+    char:"all", plat:"all", days:7, rel:"weak", view:"flow",
+    lang:"t",            // "t" 繁體 / "s" 简体
+    theme:"dark",        // "dark" / "light"
+    shown:PAGE_SIZE,     // 当前显示到第几条，换筛选条件时归零
+    q:"",                // 搜索词（空格隔开 = 同时满足）
+    sort:"heat"          // heat 热度 / new 最新 / delta 涨幅
+  };
+
+  var el = function(id){ return document.getElementById(id); };
+  var esc = function(s){
+    return String(s==null?"":s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  };
+
+  // ---------- 简繁 ----------
+  // 标题在构建时已经用 OpenCC 转好繁体（title_t），这里只负责界面文字：
+  // 浏览器里没有词典，所以用一张预先算好的「繁→简」字符对照表，只覆盖本站用到的 119 个字。
+  var I18N = (window.FISH_I18N && window.FISH_I18N.t2s) || {};
+  function toS(str){
+    if(!str) return str;
+    var out = "";
+    for(var i=0;i<str.length;i++){
+      var c = str.charAt(i);
+      out += I18N[c] || c;
+    }
+    return out;
+  }
+  // 所有动态 HTML 都走这个口子，切简体时统一转换
+  function setHtml(id, html){
+    el(id).innerHTML = (state.lang === "s") ? toS(html) : html;
+  }
+  // 卡片标题：繁体模式用预转的 title_t，简体模式用原标题
+  function titleOf(p){
+    return state.lang === "s" ? (p.title || "") : (p.title_t || p.title || "");
+  }
+
+  // ---------- 推广位 ----------
+  // 只做普通超链接：target="_blank" 新开分页，rel 里带 noopener/noreferrer/nofollow。
+  // 绝不把别人的页面用 iframe 框进来——那样既难看，也容易被当成劫持流量。
+  function renderPromos(){
+    var list = window.FISH_PROMOS || [];
+    if(!list.length){
+      el("promo").style.display = "none";
+      return;
+    }
+    el("promo").style.display = "";
+    setHtml("promo", list.map(function(x){
+      return '<a class="promo" href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer nofollow">'+
+        '<div class="promo-txt">'+
+          '<span class="promo-tag">'+esc(x.tag || "外部連結")+'</span>'+
+          '<h3>'+esc(x.title || "")+'</h3>'+
+          '<p>'+esc(x.desc || "")+'</p>'+
+          '<span class="promo-btn">'+esc(x.btn || "前往")+' ↗</span>'+
+          (x.source ? '<span class="promo-src">'+esc(x.source)+'</span>' : '')+
+        '</div>'+
+        (x.img ? '<div class="promo-img"><img src="'+esc(x.img)+'" alt="'+esc(x.title || "")+'" loading="lazy"></div>' : '')+
+      '</a>';
+    }).join(""));
+  }
+
+  if(!DATA || !DATA.posts){
+    el("notice").innerHTML =
+      '<span class="i">🧩</span><span><b>還沒抓到數據。</b> 先雙擊資料夾裡的 <code>更新數據.bat</code>，'+
+      '跑完再重新整理這頁。</span>';
+  }
+
+  var META = (DATA && DATA.meta) || {platforms:{}, generated_at:null, total:0};
+
+  // 公開版可以整批屏蔽平台（config.json 的 hide_platforms）：
+  // GitHub 在大陸時好時壞，留著只會多出一堆打不開的連結。
+  // 這裡只是「不畫」，資料本身還在——想恢復，把 config 那個陣列清空再跑一次 split 就好。
+  var HIDDEN_PLAT = (META && META.hidden_platforms) || [];
+  var PLAT_KEYS = Object.keys(PLAT).filter(function(k){ return HIDDEN_PLAT.indexOf(k) < 0; });
+  var POSTS = ((DATA && DATA.posts) || []).slice();
+
+  // 这次抓取里，哪个平台其实没抓成（比如被风控了）？
+  // 不能因为页面上还有上次的数据，就假装这次成功了。
+  var DEGRADED = {};
+  PLAT_KEYS.forEach(function(k){
+    if(PLAT[k].live && META.platforms && META.platforms[k] && META.platforms[k].ok === false){
+      DEGRADED[k] = true;
+    }
+  });
+  var degradedNames = Object.keys(DEGRADED).map(function(k){ return PLAT[k].name; });
+
+  // 連續失敗幾次？一次是偶發，兩次以上就要讓人知道「它不是偶爾抽風」。
+  function autoNote(){
+    var a = META && META.automation;
+    if(!a || !a.consecutive_failures || a.consecutive_failures < 2) return "";
+    var t = a.last_ok ? String(a.last_ok).replace("T"," ").slice(0,16) : "從來沒有成功過";
+    return " <b>已連續失敗 " + a.consecutive_failures + " 次</b>，最後一次成功是 " + esc(t) + "。";
+  }
+
+  if(degradedNames.length && DATA && DATA.posts){
+    var dnote = document.createElement("div");
+    dnote.className = "notice";
+    dnote.style.cssText = "background:linear-gradient(90deg,rgba(255,90,90,.12),rgba(255,90,90,.03));border-color:rgba(255,120,120,.35);color:#ffc9c9;margin-top:-8px";
+    dnote.innerHTML = '<span class="i">📡</span><span><b>這次 ' + degradedNames.join("、") +
+      ' 沒抓完整。</b> 被平台的風控攔下來了，畫面上顯示的是上一次抓到的內容。隔幾分鐘再按一次「更新數據」就好。' +
+      autoNote() + '</span>';
+    document.querySelector(".wrap").insertBefore(dnote, el("notice").nextSibling);
+  }
+
+  // ---------- 顶部时间信息 ----------
+  if(META.generated_at){
+    var g = new Date(META.generated_at);
+    el("stamp").textContent = g.toLocaleString("zh-TW",{hour12:false});
+    el("window").textContent = "最近 " + (META.window_days||7) + " 天" +
+      (classicCount() ? " · 另 " + classicCount() + " 條經典" : "");
+    el("took").textContent = (META.took_seconds||"?") + " 秒";
+  }
+
+  // ---------- 筛选条 ----------
+  // 只在「時間窗口」內算數——不然切到近 7 天，角色上的數字還是 30 天的總數。
+  function inWindow(p){
+    var cut = state.days ? (Date.now()/1000 - state.days*86400) : 0;
+    return !cut || !(p.published_ts||0) || p.published_ts >= cut;
+  }
+  function countBy(fn){ return POSTS.filter(function(p){ return fn(p) && inWindow(p); }).length; }
+  function classicCount(){ return POSTS.filter(function(p){ return p.classic; }).length; }
+
+  function buildChips(){
+    var chars = [["all","全部角色","🌐"]];
+    Object.keys(CHARNAME).forEach(function(k){
+      if(countBy(function(p){return p.character===k;}) > 0) chars.push([k, CHARNAME[k].name, CHARNAME[k].icon]);
+    });
+    setHtml("chars", chars.map(function(c){
+      var n = c[0]==="all" ? POSTS.filter(inWindow).length : countBy(function(p){return p.character===c[0];});
+      return '<button class="chip'+(state.char===c[0]?" on":"")+'" data-c="'+c[0]+'">'+
+             c[2]+' '+esc(c[1])+'<span class="n">'+n+'</span></button>';
+    }).join(""));
+
+    setHtml("plats", PLAT_KEYS.map(function(k){
+      var live = PLAT[k].live;
+      var n = countBy(function(p){return p.platform===k;});
+      var cls = "chip" + (state.plat===k?" on":"") + (live?"":" dead");
+      var style = live ? "" : ' style="opacity:.42;cursor:not-allowed"';
+      return '<button class="'+cls+'" data-p="'+k+'"'+style+(live?"":' title="未接入"')+'>'+
+             PLAT[k].icon+' '+PLAT[k].name+(live?'<span class="n">'+n+'</span>':' · 未接入')+'</button>';
+    }).join(""));
+  }
+
+  el("chars").addEventListener("click", function(e){
+    var b = e.target.closest("[data-c]"); if(!b) return;
+    state.char = b.dataset.c; state.shown = PAGE_SIZE; buildChips(); render();
+  });
+  el("plats").addEventListener("click", function(e){
+    var b = e.target.closest("[data-p]"); if(!b) return;
+    if(!PLAT[b.dataset.p].live) return;      // 未接入的平台，点了不装样子
+    state.plat = b.dataset.p; state.shown = PAGE_SIZE; buildChips(); render();
+  });
+  el("when").addEventListener("click", function(e){
+    var b = e.target.closest("[data-d]"); if(!b) return;
+    state.days = +b.dataset.d; state.shown = PAGE_SIZE;
+    [].forEach.call(this.querySelectorAll("button"), function(x){ x.classList.toggle("on", x===b); });
+    buildChips();     // 角色/平台上的數字是跟著時間窗口走的，換窗口要重算
+    render();
+  });
+  el("rel").addEventListener("click", function(e){
+    var b = e.target.closest("[data-r]"); if(!b) return;
+    state.rel = b.dataset.r; state.shown = PAGE_SIZE;
+    [].forEach.call(this.querySelectorAll("button"), function(x){ x.classList.toggle("on", x===b); });
+    render();
+  });
+  el("view").addEventListener("click", function(e){
+    var b = e.target.closest("[data-v]"); if(!b) return;
+    state.view = b.dataset.v;
+    [].forEach.call(this.querySelectorAll("button"), function(x){ x.classList.toggle("on", x===b); });
+    render();
+  });
+
+  // ---------- 搜索 ----------
+  var qInput = el("q");
+  function syncQueryUI(){
+    el("qbox").classList.toggle("has", !!state.q);
+  }
+  qInput.addEventListener("input", function(){
+    state.q = (qInput.value || "").trim();
+    syncQueryUI();
+    state.shown = PAGE_SIZE;   // 换了搜索词就退回第 1 页
+    render();
+  });
+  el("qclear").addEventListener("click", function(){
+    qInput.value = "";
+    state.q = "";
+    syncQueryUI();
+    state.shown = PAGE_SIZE;
+    render();
+    if(qInput.focus) qInput.focus();
+  });
+  // 按 / 直接跳到搜索框（很多站都这么干，养成肌肉记忆了）
+  document.addEventListener("keydown", function(e){
+    if(e.key === "/" && document.activeElement !== qInput){
+      if(e.preventDefault) e.preventDefault();
+      if(qInput.focus) qInput.focus();
+    }
+  });
+
+  // ---------- 排序 ----------
+  el("sort").addEventListener("click", function(e){
+    var b = e.target.closest("[data-s]"); if(!b) return;
+    state.sort = b.dataset.s;
+    state.shown = PAGE_SIZE;
+    [].forEach.call(this.querySelectorAll("button"), function(x){ x.classList.toggle("on", x===b); });
+    render();
+  });
+
+  function syncToggles(){
+    [["when","d",state.days],["rel","r",state.rel],
+     ["sort","s",state.sort],["view","v",state.view]].forEach(function(cfg){
+      var box = el(cfg[0]);
+      if(!box.querySelectorAll) return;
+      [].forEach.call(box.querySelectorAll("button"), function(x){
+        x.classList.toggle("on", String(x.dataset[cfg[1]]) === String(cfg[2]));
+      });
+    });
+  }
+
+  // ---------- 过滤 ----------
+  // 搜索词：空格隔开就是 AND——「大肥鱼 手书」= 两个词都要出现。
+  // 搜的范围包括标题（简/繁两版）、作者、来源路径，所以搜「UP主」也能把
+  // 靠作者名捞回来的那批翻出来。
+  function tokens(){
+    return state.q.toLowerCase().split(/\s+/).filter(Boolean);
+  }
+
+  function hitQuery(p, ts){
+    if(!ts.length) return true;
+    var hay = [
+      p.title || "", p.title_t || "", p.author || "",
+      p.found_by || "", p.summary || ""
+    ].join(" ").toLowerCase();
+    for(var i=0;i<ts.length;i++){
+      if(hay.indexOf(ts[i]) === -1) return false;
+    }
+    return true;
+  }
+
+  function visible(){
+    var ts = tokens();
+    return POSTS.filter(function(p){
+      if(state.char!=="all" && p.character!==state.char) return false;
+      if(state.plat!=="all" && p.platform!==state.plat) return false;
+      if(state.rel==="strong" && p.match!=="strong") return false;
+      if(!inWindow(p)) return false;
+      if(!hitQuery(p, ts)) return false;
+      return true;
+    });
+  }
+
+  // ---------- 排序 ----------
+  // 平台内部的“热度”是它自己的口径（播放 / star），跨平台比不了，
+  // 所以这里只做「同一批结果内部的排列方式」，不承诺跨平台公平。
+  function sortBy(list, mode){
+    var arr = list.slice();
+    if(mode === "new"){
+      arr.sort(function(a,b){ return (b.published_ts||0)-(a.published_ts||0); });
+    } else if(mode === "delta"){
+      // 涨幅：NEW（hot_delta 为 null）排在前面，其余按增量降序
+      arr.sort(function(a,b){
+        var da = (a.hot_delta === null || a.hot_delta === undefined) ? Infinity : a.hot_delta;
+        var db = (b.hot_delta === null || b.hot_delta === undefined) ? Infinity : b.hot_delta;
+        if(da !== db) return db - da;
+        return (b.heat||0)-(a.heat||0);
+      });
+    } else {
+      arr.sort(function(a,b){ return (b.heat||0)-(a.heat||0); });
+    }
+    return arr;
+  }
+
+  // ---------- 状态条 ----------
+  function renderStats(){
+    var vs = visible();
+    var parts = PLAT_KEYS.map(function(k){
+      var on = PLAT[k].live;
+      var dot = !on ? "r" : (DEGRADED[k] ? "o" : "g");
+      var n = vs.filter(function(p){return p.platform===k;}).length;
+      return '<div class="stat'+(on?"":" off")+'">'+
+        '<div class="k"><span class="dot '+dot+'"></span>'+PLAT[k].name+'</div>'+
+        '<div class="v">'+(on? n : "未接入")+(on?'<small>條</small>':'')+'</div></div>';
+    });
+    parts.unshift('<div class="stat"><div class="k">目前篩出</div><div class="v">'+vs.length+
+                  '<small>條</small></div></div>');
+    setHtml("stats", parts.join(""));
+  }
+
+  // ---------- 卡片 ----------
+  function timeAgo(ts){
+    if(!ts) return "時間未知";
+    var diff = Date.now()/1000 - ts;
+    if(diff < 3600) return Math.max(1,Math.floor(diff/60)) + " 分鐘前";
+    if(diff < 86400) return Math.floor(diff/3600) + " 小時前";
+    var d = Math.floor(diff/86400);
+    if(d < 30) return d + " 天前";
+    return new Date(ts*1000).toLocaleDateString("zh-TW");
+  }
+
+  function deltaHtml(p){
+    if(!p.platform) return "";
+    if(p.hot_delta === null || p.hot_delta === undefined) return '<span class="delta d-new">NEW</span>';
+    if(p.hot_delta > 0) return '<span class="delta d-up">↑ '+p.hot_delta+'</span>';
+    if(p.hot_delta < 0) return '<span class="delta d-down">↓ '+Math.abs(p.hot_delta)+'</span>';
+    return "";
+  }
+
+  // 卡片上标一句「这条是怎么被找到的」——搜索 / 相关推荐 / UP主 / 手动釘選。
+  // 用户能一眼看出这条是靠关键词撞上的，还是靠关系网捞回来的，可信度不一样。
+  function sourceChip(p){
+    var f = p.found_by || "";
+    var icon = "🔎", label = "搜尋";
+    if(p.pinned || f.indexOf("手動") >= 0 || f.indexOf("手动") >= 0){
+      icon = "📌"; label = "手動釘選";
+    } else if(f.indexOf("相關") >= 0 || f.indexOf("相关") >= 0){
+      icon = "🕸"; label = "相關推薦";
+    } else if(f.indexOf("UP主") >= 0 || f.indexOf("UP 主") >= 0){
+      icon = "👤"; label = "UP 主";
+    } else if(p.platform === "github"){
+      icon = "🐙"; label = "GitHub";
+    }
+    return '<span class="src" title="'+esc(f || "來源不明")+'">'+icon+' '+label+'</span>';
+  }
+
+  function card(p){
+    var pl = PLAT[p.platform] || {name:p.platform, cls:"", icon:"•"};
+    var ch = CHARNAME[p.character] || {name:p.character, icon:"•"};
+    var cover = p.cover
+      ? '<img src="'+esc(p.cover)+'" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'">'
+      : "";
+    return '<article class="card" data-id="'+esc(p.id)+'">'+
+      '<div class="thumb"><span class="ph">'+pl.icon+'</span>'+cover+
+        '<span class="badge '+pl.cls+'">'+pl.icon+' '+esc(pl.name)+'</span>'+
+        '<span class="rel">'+(p.match==="strong"?"強相關":"相關")+'</span>'+
+      '</div>'+
+      '<div class="body">'+
+        '<h3 class="title">'+esc(titleOf(p))+'</h3>'+
+        '<div class="meta"><span>'+ch.icon+' '+esc(ch.name)+'</span>'+
+          '<span class="who">@'+esc(p.author||"未知")+'</span>'+
+          '<span>'+timeAgo(p.published_ts)+'</span>'+
+          (p.classic ? '<span class="cl" title="歷史最熱：按播放量排，不受 7 天窗口限制">🏆 經典</span>' : '')+
+          sourceChip(p)+
+          '</div>'+
+        '<div class="foot"><span class="heat">'+esc(p.heat_label)+deltaHtml(p)+'</span>'+
+          '<a class="go" href="'+esc(p.url)+'" target="_blank" rel="noopener noreferrer">開啟原帖 ↗</a></div>'+
+      '</div></article>';
+  }
+
+  // 一次只放 20 条，剩下的收在「加载更多」后面。
+  // 不然 300 条一口气全塞进 DOM，滚动会沉，而且用户根本翻不到底。
+  function pagerHtml(total, shown){
+    if(!total) return "";
+    if(shown >= total){
+      return '<div class="pager"><span class="cnt">已顯示全部 ' + total + ' 條</span></div>';
+    }
+    return '<div class="pager">'+
+      '<span class="cnt">已顯示 ' + shown + ' / ' + total + ' 條</span>'+
+      '<button type="button" class="more" id="moreBtn">▶ 載入更多（還有 ' + (total - shown) + ' 條）</button>'+
+      '</div>';
+  }
+
+  function render(){
+    var vs = visible();
+    renderStats();
+
+    var isFlow = state.view === "flow";
+    el("flow").style.display = isFlow ? "grid" : "none";
+    el("cols").style.display = isFlow ? "none" : "grid";
+
+    // 两个视图都先渲染好、再切换显示，避免切过去的时候空白一下
+    vs = sortBy(vs, state.sort);
+
+    if(vs.length){
+      var shown = Math.min(state.shown, vs.length);
+      setHtml("flow", vs.slice(0, shown).map(card).join("") + pagerHtml(vs.length, shown));
+    } else {
+      var empty;
+      if(state.q){
+        empty = '「'+esc(state.q)+'」在目前的條件下找不到東西。<br>'+
+                '試試：<button class="linkbtn" id="resetAll" type="button">清空全部篩選</button>'+
+                '　或把時間放寬到「全部」';
+      } else {
+        empty = '這個組合下沒有符合條件的帖子。<br>試試換個角色、把時間放寬到「全部」，或關掉「只看強相關」';
+      }
+      setHtml("flow", '<div class="emptycol" style="grid-column:1/-1">'+empty+'</div>');
+    }
+
+    setHtml("cols", PLAT_KEYS.map(function(k){
+        var pl = PLAT[k];
+        var list = sortBy(vs.filter(function(p){return p.platform===k;}), state.sort).slice(0,10);
+        var head = '<div class="col-h"><span class="nm">'+pl.icon+' '+pl.name+'</span>'+
+                   '<span class="ct">'+(pl.live? list.length+" 條" : "未接入")+'</span></div>';
+        var body;
+        if(!pl.live){
+          var note = (META.platforms && META.platforms[k] && META.platforms[k].note) || "未接入";
+          body = '<div class="emptycol">🚫<br>'+esc(note)+'</div>';
+        } else if(!list.length){
+          body = '<div class="emptycol">這段時間沒有符合條件的帖子</div>';
+        } else {
+          body = list.map(function(p,i){
+            return '<a class="mini" href="'+esc(p.url)+'" target="_blank" rel="noopener noreferrer">'+
+              '<span class="rk">'+(i+1)+'</span><span><span class="t">'+esc(titleOf(p))+'</span>'+
+              '<span class="h">'+esc(p.heat_label)+'</span></span></a>';
+          }).join("");
+        }
+        return '<div class="col">'+head+body+'</div>';
+      }).join(""));
+  }
+
+  // ---------- 详情弹窗 ----------
+  function openDetail(id){
+    var p = POSTS.filter(function(x){return x.id===id;})[0];
+    if(!p) return;
+    var pl = PLAT[p.platform] || {name:p.platform};
+    var ch = CHARNAME[p.character] || {name:p.character};
+    var metrics = Object.keys(p.metrics||{}).map(function(k){
+      return k + " " + (p.metrics[k]||0).toLocaleString("en-US");
+    }).join(" · ") || "—";
+
+    var why = p.match==="strong"
+      ? "標題／簡介命中了明確的二創詞（手書、立繪、表情包、同人…），所以判定為<strong>強相關</strong>，直接收錄。"
+      : "命中了角色詞、也沒有出現技術類詞，但沒看到明確的二創詞，所以標成<strong>相關</strong>而不是強相關。這種條目寧可留著讓你判斷，也不直接丟掉。";
+
+    var modalHtml =
+      '<div class="modal-h"><h3>'+esc(titleOf(p))+'</h3>'+
+        '<button class="x" id="closeX">✕</button></div>'+
+      '<div class="modal-b">'+
+        '<table class="kv">'+
+          '<tr><td>平台</td><td>'+esc(pl.name)+'</td></tr>'+
+          '<tr><td>角色</td><td>'+esc(ch.name)+'</td></tr>'+
+          '<tr><td>作者</td><td>@'+esc(p.author||"未知")+'</td></tr>'+
+          '<tr><td>發布</td><td>'+esc(p.published||"未知")+'（'+timeAgo(p.published_ts)+'）</td></tr>'+
+          '<tr><td>熱度</td><td style="color:#ff7a45;font-weight:700">'+esc(p.heat_label)+'</td></tr>'+
+          '<tr><td>明細</td><td>'+esc(metrics)+'</td></tr>'+
+          '<tr><td>怎麼找到的</td><td>'+esc(p.found_by||"—")+'</td></tr>'+
+          '<tr><td>狀態</td><td>'+(p.pinned ? '📌 手動指定（seeds.txt）'
+              : (p.carried ? '🕓 這次搜索沒再出現，沿用上次抓到的數據' : '✅ 這次抓到的'))+'</td></tr>'+
+          (p.note ? '<tr><td>備註</td><td>'+esc(p.note)+'</td></tr>' : '')+
+          '<tr><td>首次收錄</td><td>'+esc(p.first_seen||"—")+'</td></tr>'+
+          '<tr><td>原始連結</td><td style="word-break:break-all;color:#7fb6e8">'+esc(p.url)+'</td></tr>'+
+        '</table>'+
+        '<div class="why">🔍 <b>它為什麼被判定成二創：</b>'+why+'</div>'+
+        '<div class="act">'+
+          '<a class="btn" href="'+esc(p.url)+'" target="_blank" rel="noopener noreferrer">開啟原帖 ↗</a>'+
+          '<button class="btn ghost" id="closeB">關閉</button>'+
+        '</div>'+
+      '</div>';
+    setHtml("modal", modalHtml);
+    el("mask").classList.add("on");
+    el("closeX").onclick = el("closeB").onclick = closeDetail;
+  }
+  function closeDetail(){ el("mask").classList.remove("on"); }
+
+  el("flow").addEventListener("click", function(e){
+    if(e.target.closest("#resetAll")){         // 空状态里的「清空全部筛选」
+      state.q = ""; state.char = "all"; state.plat = "all";
+      state.rel = "weak"; state.days = 7; state.view = "flow";
+      state.shown = PAGE_SIZE;
+      if(qInput.value) qInput.value = "";
+      syncQueryUI(); syncToggles(); buildChips(); render();
+      return;
+    }
+    if(e.target.closest("#moreBtn")){          // ▶ 載入更多
+      state.shown += PAGE_SIZE;
+      render();
+      return;
+    }
+    if(e.target.closest("a.go")) return;        // 点外链就直接跳，不弹窗
+    var c = e.target.closest("[data-id]"); if(c) openDetail(c.dataset.id);
+  });
+  el("mask").addEventListener("click", function(e){ if(e.target===this) closeDetail(); });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape") closeDetail(); });
+
+  // ---------- 导出一份 CSV（只导当前筛选出来的） ----------
+  function exportCsv(){
+    var vs = visible().slice().sort(function(a,b){ return (b.heat||0)-(a.heat||0); });
+    if(!vs.length){ alert("目前沒有可導出的內容。"); return; }
+    var head = ["標題","角色","平台","作者","發佈時間","熱度","相關度","怎麼找到的","連結"];
+    var lines = [head];
+    vs.forEach(function(p){
+      var pl = (PLAT[p.platform]||{}).name || p.platform;
+      var ch = (CHARNAME[p.character]||{}).name || p.character;
+      lines.push([titleOf(p), ch, pl, p.author, p.published || "",
+                  p.heat_label, (p.match==="strong"?"強相關":"相關"),
+                  p.found_by || "", p.url]);
+    });
+    var csv = lines.map(function(row){
+      return row.map(function(c){
+        return '"' + String(c==null?"":c).replace(/"/g,'""') + '"';
+      }).join(",");
+    }).join("\r\n");
+    // BOM 是给 Excel 认 UTF-8 的，不加会乱码
+    var blob = new Blob(["\ufeff" + csv], {type:"text/csv;charset=utf-8;"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "fish-radar-" + new Date().toISOString().slice(0,10) + ".csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+  }
+  el("csv").addEventListener("click", exportCsv);
+
+  // ---------- 首屏之后的异步补载 ----------
+  function updateHint(){
+    var hint;
+    if(REST_FAILED){
+      hint = "⚠️ 完整資料沒載進來（只顯示首屏 <b>"+POSTS.length+"</b> 條）。少見，重新整理一次通常就好。";
+    } else if(!REST_LOADED){
+      hint = "⏳ 完整資料載入中…　目前只顯示最熱的 <b>"+POSTS.length+"</b> 條";
+    } else {
+      hint = "已載入全部 <b>"+POSTS.length+"</b> 條";
+    }
+    setHtml("loadhint", hint);
+  }
+
+  function loadRest(){
+    var s = document.createElement("script");
+    s.src = "data/posts_rest.js";
+    s.onload = function(){
+      var r = window.FISH_RADAR_REST;
+      var have = {};
+      POSTS.forEach(function(p){ have[p.id] = 1; });
+      if(r && r.posts){
+        r.posts.forEach(function(p){ if(!have[p.id]){ POSTS.push(p); have[p.id] = 1; } });
+      }
+      REST_LOADED = true;
+      buildChips(); render(); updateHint();
+    };
+    s.onerror = function(){
+      REST_FAILED = true; REST_LOADED = true; updateHint();
+    };
+    document.body.appendChild(s);
+  }
+
+  // ---------- 数据是不是太旧了 ----------
+  // 热度站最忌讳用户看不出新旧：转发出去的时候没人会替你解释「这是三天前的」。
+  // 超过 24 小时就提醒，超过 72 小时加重语气并标红。
+  function renderStale(){
+    var box = el("stale"), stamp = el("stamp");
+    if(!META.generated_at){ box.style.display = "none"; return; }
+    var t = new Date(META.generated_at).getTime();
+    if(!t){ box.style.display = "none"; return; }
+
+    var hrs = (Date.now() - t) / 3600000;
+    if(stamp.classList){
+      stamp.classList.remove("old");
+      stamp.classList.remove("veryold");
+    }
+    if(hrs < 24){ box.style.display = "none"; return; }
+
+    var very = hrs >= 72;
+    box.style.display = "block";
+    box.className = "stale" + (very ? " warn" : "");
+    if(stamp.classList) stamp.classList.add(very ? "veryold" : "old");
+
+    var label = very ? (Math.floor(hrs / 24) + " 天前") : (Math.floor(hrs) + " 小時前");
+    setHtml("stale",
+      (very ? "⛔ " : "⚠️ ") +
+      "<b>這批數據是 " + label + "抓的。</b>" +
+      (very ? "熱度早就變了，轉發前一定要先按一次「更新數據」。"
+            : "熱度會過期，看之前先確認一下新舊。") +
+      '<span class="stale-t">抓取時間 ' +
+      esc(String(META.generated_at).replace("T", " ").slice(0, 16)) + "</span>");
+  }
+
+  // ---------- 深浅色 ----------
+  function applyTheme(){
+    var light = state.theme === "light";
+    if(document.body.setAttribute) document.body.setAttribute("data-theme", light ? "light" : "dark");
+    el("themeBtn").textContent = light ? "🌙" : "☀️";
+    el("themeBtn").title = light ? "切換到深色" : "切換到淺色";
+    try { localStorage.setItem("fish-theme", state.theme); } catch(e){}
+  }
+  el("themeBtn").addEventListener("click", function(){
+    state.theme = (state.theme === "light") ? "dark" : "light";
+    applyTheme();
+  });
+
+  // ---------- 简繁 ----------
+  // 静态文字（页头、筛选条标题、页脚）在浏览器里逐节点换；
+  // 动态生成的卡片、统计、弹窗，走 setHtml() 那条路，天然就是对的。
+  function applyStaticLang(){
+    var root = document.querySelector(".wrap");
+    if(!root || !root.childNodes) return;
+    var skip = {flow:1, cols:1, stats:1, loadhint:1, chars:1, plats:1};
+    var nodes = [];
+    (function walk(n){
+      for(var i=0;i<(n.childNodes||[]).length;i++){
+        var c = n.childNodes[i];
+        if(c.nodeType === 3){ nodes.push(c); }
+        else if(c.nodeType === 1 && c.tagName !== "SCRIPT" && c.tagName !== "STYLE"){
+          if(!skip[c.id]) walk(c);
+        }
+      }
+    })(root);
+    nodes.forEach(function(t){
+      if(t.__orig === undefined) t.__orig = t.textContent;
+      t.textContent = (state.lang === "s") ? toS(t.__orig) : t.__orig;
+    });
+  }
+
+  function applyLang(){
+    el("langBtn").textContent = (state.lang === "s") ? "简" : "繁";
+    el("langBtn").title = (state.lang === "s") ? "切換到繁體" : "切換到简体";
+    if(document.documentElement && document.documentElement.setAttribute){
+      document.documentElement.setAttribute("lang", state.lang === "s" ? "zh-Hans" : "zh-Hant");
+    }
+    if(document.title) document.title = (state.lang === "s") ? toS(document.title) : (document.__titleT || document.title);
+    if(!document.__titleT) document.__titleT = document.title;
+    applyStaticLang();
+    buildChips(); renderPromos(); renderStale(); render(); updateHint();
+    try { localStorage.setItem("fish-lang", state.lang); } catch(e){}
+  }
+  el("langBtn").addEventListener("click", function(){
+    state.lang = (state.lang === "s") ? "t" : "s";
+    applyLang();
+  });
+
+  // ---------- 启动 ----------
+  try {
+    var savedTheme = localStorage.getItem("fish-theme");
+    if(savedTheme === "light" || savedTheme === "dark") state.theme = savedTheme;
+    var savedLang = localStorage.getItem("fish-lang");
+    if(savedLang === "s" || savedLang === "t") state.lang = savedLang;
+  } catch(e){}
+
+  document.__titleT = document.title;
+  applyTheme();
+  syncQueryUI();
+  buildChips();
+  renderPromos();
+  renderStale();
+  render();
+  updateHint();
+  if(state.lang === "s"){
+    applyLang();                 // 上次停留在简体，就整套切过去（含标签页标题）
+  } else {
+    el("langBtn").textContent = "繁";
+  }
+
+  // 等首屏画完再补，别跟首屏抢带宽
+  if(window.requestIdleCallback){
+    window.requestIdleCallback(loadRest, {timeout: 800});
+  } else {
+    setTimeout(loadRest, 80);
+  }
+})();
+</script>
+</body>
+</html>
