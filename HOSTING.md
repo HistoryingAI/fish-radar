@@ -162,3 +162,28 @@ Cloudflare Pages 綁自定義域名時，那條 CNAME **必須是橙雲（已代
 1. 雙擊 `測速.bat` — 看你的網址是不是 ✅、幾秒。
 2. 手機關 Wi-Fi 用 4G 開一次 — 這是唯一有意義的用戶測試。
 3. 想看「是不是被牆」→ 同一個 IP，直連掛、開代理通，就是被牆。
+
+---
+
+## 九、目前進度（2026-10-26 21:15）
+
+| 項目 | 狀態 |
+|---|---|
+| 域名 | `fishradar.vip`，阿里雲註冊，**2027-10-26 到期**（記得開自動續費） |
+| 阿里雲狀態 | **`client hold`**（實名認證未完成）→ 公網 `ENOTFOUND` |
+| Cloudflare 帳號 | 已建立，`fishradar.vip` **已成功加入**（zone 已在 CF 上生效） |
+| Cloudflare 給的 NS | `coraline.ns.cloudflare.com` ／ `milan.ns.cloudflare.com` |
+| 阿里雲目前的 NS | 仍是 `dns1.hichina.com` ／ `dns2.hichina.com` ← **還沒改** |
+| GitHub | `2e992d2` ← `bb479ef`（含 `_headers`、`.assetsignore`）**還沒推上去** |
+
+**怎麼確認 Cloudflare 那邊真的加好了**：直接問那兩個 NS「有沒有這個 zone」。
+兩個都回 SOA 同一個序列號，就代表 zone 建好了：
+
+```
+coraline.ns.cloudflare.com → SOA primary=coraline.ns.cloudflare.com  serial=2418506097
+milan.ns.cloudflare.com    → SOA primary=coraline.ns.cloudflare.com  serial=2418506097
+```
+
+（`108.162.x` / `162.159.x` / `172.64.x` 這三段都是 Cloudflare 自己的 NS 網段，不是假冒。）
+
+**接下來**：推送 → 等實名短信 → 阿里雲改 NS → CF Pages 連倉庫 → 綁域名 → `換網址.bat` → 手機 4G 驗。
