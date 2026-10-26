@@ -11,6 +11,9 @@ __pycache__/
 _dryrun/
 _t/
 
+# 自動更新的執行日誌（本機看就好，不進倉庫）
+logs/
+
 # 系統檔
 .DS_Store
 Thumbs.db
