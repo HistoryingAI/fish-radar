@@ -22,12 +22,24 @@ echo. >> "%LOG%"
 echo ---------- %date% %time% 开始 ---------- >> "%LOG%"
 
 REM ---------- 找 Python ----------
+REM 顺序：先找确定能用的那份，最后才退回 PATH。
+REM 教训（2026-10-26）：以前把 where python 放第一，抓到的是微软商店的
+REM python.exe 别名，一跑就 9009，排程连跑两次全是"采集退出码 9009"。
 set "PY="
-where python >nul 2>nul && set "PY=python"
-if not defined PY if exist "%USERPROFILE%\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\python.exe" set "PY=%USERPROFILE%\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\python.exe"
+if exist "%USERPROFILE%\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\python.exe" set "PY=%USERPROFILE%\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\python.exe"
 if not defined PY if exist "C:\Python312\python.exe" set "PY=C:\Python312\python.exe"
 if not defined PY (
+  where python >nul 2>nul && set "PY=python"
+)
+if not defined PY (
   echo [错误] 找不到 Python >> "%LOG%"
+  exit /b 1
+)
+
+REM 真的能跑起来才算数（商店别名在这里会被挡下）
+"%PY%" -c "import sys" >nul 2>&1
+if errorlevel 1 (
+  echo [错误] Python 跑不起来（可能是商店别名）：%PY% >> "%LOG%"
   exit /b 1
 )
 
