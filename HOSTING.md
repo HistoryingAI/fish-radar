@@ -187,3 +187,42 @@ milan.ns.cloudflare.com    → SOA primary=coraline.ns.cloudflare.com  serial=24
 （`108.162.x` / `162.159.x` / `172.64.x` 這三段都是 Cloudflare 自己的 NS 網段，不是假冒。）
 
 **接下來**：推送 → 等實名短信 → 阿里雲改 NS → CF Pages 連倉庫 → 綁域名 → `換網址.bat` → 手機 4G 驗。
+
+---
+
+## 十、Pages 已經部署了（2026-10-26 21:30）
+
+`https://fish-radar.pages.dev/` — **大陸直連 1.01 秒**、HTTP 200、標題正常、
+`data/posts_top.js` 是 703 條、時間戳 `2026-10-26T20:10` 跟本機一致。
+`_headers` 生效（`data/` 是 `max-age=300`）。**在域名還沒生效的時候，站就已經能開了。**
+
+### 但 `.assetsignore` 是無效的（我的錯）
+
+Cloudflare **Pages 不讀 `.assetsignore`**——那是 Workers Static Assets 的功能。
+實測這些都還能直接下載：
+
+```
+/collect.py      200  40.8 KB
+/START_HERE.md   200  22.2 KB
+/config.json     200   3.6 KB
+/data/posts.json 200 679.6 KB
+（還有 vendor/ 那 1.1 MB 和 logs/）
+```
+
+不影響安全（倉庫本來就公開），但沒必要。**修法：改成「只挑要公開的檔案」**，
+`build.sh` 已經寫好（挑 10 個檔案進 `dist/`，總共 866 KB），
+到 Cloudflare 後台 **Settings → Build** 改兩個欄位：
+
+| 欄位 | 改成 |
+|---|---|
+| Build command | `bash build.sh` |
+| Build output directory | `dist` |
+
+存檔後回 Deployments 按 **Retry deployment**（只改設定不會自動重新部署）。
+如果建置失敗，把 build command 清空、output directory 改回 `/` 就退回現在的樣子。
+
+### 小知識：`method.html` 會被 308 導到 `/method`
+
+Cloudflare Pages 預設把 `xxx.html` 導到不帶副檔名的 `xxx`。功能正常、只多一次轉發，
+有潔癖的話把 `index.html` 裡的連結改成 `/method` 就好。
+
