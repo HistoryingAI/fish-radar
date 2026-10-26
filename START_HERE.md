@@ -1,6 +1,6 @@
 # START HERE · 肥魚雷達（新窗口啟動包）
 
-更新：2026-10-25 12:12（Asia/Shanghai）
+更新：2026-10-26 20:35（Asia/Shanghai）　·　託管已定案（見第 9 節）
 讀完這一頁就能接手，不需要舊對話。
 
 工作目錄：
@@ -217,6 +217,11 @@ C:\Users\woshinidie\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\
 | `method.html` | 分類方法頁（規則、偏見、已知錯誤） | ✅ 同上，改完也要重算字表 |
 | `DEPLOY.md` | 上線步驟（GitHub → Vercel），寫給非技術背景看的 | ✅ 流程變了要同步 |
 | `vercel.json` | Vercel 快取：`data/` 只緩存 5 分鐘，不然新數據會被舊快取蓋住 | ✅ 少動 |
+| `HOSTING.md` | **託管決策書**：為什麼搬、實測數據、今晚的操作順序與坑 | ✅ |
+| `_headers` | Cloudflare 版的 `vercel.json`（CF 用純文字檔，不吃 json） | ✅ 少動 |
+| `.assetsignore` | Cloudflare 不公開的檔案（`*.py`／`*.bat`／`*.md`／`vendor/`／`logs/`） | ✅ |
+| `換網址.bat` | 雙擊：把 `og:image`／`canonical` 改成新域名並推送 | ✅ |
+| `測速.bat`／`測速.js` | 雙擊：不掛代理，直連測「百度／你的網址／舊 Vercel」 | ✅ |
 | `發布.bat` | 雙擊把 `data/` 推上 GitHub，Vercel 自動部署 | ✅ |
 | `推送.bat` | 雙擊推送**所有**本機提交（改了 html/md 之後用） | ✅ |
 | `自動更新.bat` | 給計畫任務調用的：抓 → 成功才提交 → 推。日誌在 `logs/update.log` | ✅ 別手改流程 |
@@ -295,6 +300,11 @@ C:\Users\woshinidie\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\
 
 ## 8. 待辦（按優先級）
 
+**🔥 現在只有這一件：把站搬到 `fishradar.vip`。**
+完整步驟與坑在 [`HOSTING.md`](HOSTING.md) 第五節。摘要：
+域名已買但還是 `client hold`（實名認證沒過）→ 阿里雲認證到「正常」→ NS 指 Cloudflare
+→ Pages 連 `HistoryingAI/fish-radar` → 綁域名 → 雙擊 `換網址.bat` → 手機 4G 驗 → `測速.bat` 留數字。
+
 1. ~~**等 `ai-film-radar` 那輪爬完 → 跑一次 `collect.py`**~~ ✅ 2026-10-25 09:48 跑完，
    232 + 34 條，零 412。下一次抓之前一樣要先確認對面沒在跑。
 2. ~~**上線（GitHub + Vercel）**~~ ✅ 2026-10-25 20:23 上線：
@@ -316,26 +326,45 @@ C:\Users\woshinidie\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\
 
 ---
 
-## 9. 域名與託管（未決，2026-10-26）
+## 9. 域名與託管（已定案：D，2026-10-26）
 
-**現狀**：`https://fish-radar-two.vercel.app/` 能開，但**只對能連境外的人**。
-同一台機實測：走代理 0.6 秒 200，**直連 21 秒超時**。手機 4G 實測也打不開。
+**完整證據與操作步驟在 [`HOSTING.md`](HOSTING.md)，這一節只留結論。**
 
-**關鍵發現**：被牆的是 `*.vercel.app` 這個泛域名，**不是「境外託管」本身**。
-反例：`蓝色大肥鱼.com`（同題材的另一個站，Cloudflare 後面，無備案）**直連 200、2.7 秒**。
-也就是說 **自己的域名 + Cloudflare = 大陸能用**（慢，但能開）。
+**結論**：走 **D — 自己的域名 + Cloudflare Pages**。域名 `fishradar.vip` 已於 2026-10-26 在阿里雲購入。
 
-| 方案 | 成本 | 時間 | 大陸 | 維護 |
-|---|---|---|---|---|
-| A. Vercel 默認域名（現狀） | 0 | 已完成 | ❌ | 無 |
-| **D. 自己的域名 + Cloudflare Pages** | **¥60/年** | 1 小時 | ✅ 慢 | 無 |
-| C. 香港 VPS + 域名 | ¥300/年 | 1 天 | ✅ 較快 | 要管機器 |
-| B. 備案 + 國內託管 | ¥60/年 | 2–3 週 | ✅ 最快 | 無 |
+**兩條舊結論是錯的，別再照著做：**
 
-**推薦 D**：倉庫現成的，Cloudflare Pages 直接連 `HistoryingAI/fish-radar`，
-唯一要買的是域名。步驟：買域名 → NS 指 Cloudflare → Pages 連倉庫 → 綁域名 → 改 og:image → push。
+1. ❌ 舊：「被牆的只是 `*.vercel.app` 泛域名，自己的域名指過去就行」
+   ✅ 實測：Vercel 是 **IP 級封鎖**。同一個 IP，大陸出口 `ECONNRESET`、走代理 `HTTP 200 server: Vercel`；
+      換 `baidu.com` 的 SNI 去連也一樣被切。`76.76.21.21 / 216.198.79.1 / 76.76.21.61 / 66.33.60.130 / 76.76.21.9` 全中。
+      → **域名指到 Vercel = 解析成功、0.3 秒被切。這條捷徑不存在。**
+2. ❌ 舊：「反例 `蓝色大肥鱼.com` 在 Cloudflare 後面」
+   ✅ 實測：`server: Caddy`、無 `cf-ray`、Let's Encrypt、TTFB 273ms → 是**自建伺服器**，不是 Cloudflare。
+      它證明的是「自有域名 + 境外自建伺服器」可行（那是 C），不是「Cloudflare 可行」。
 
-風險：Cloudflare 免費版國內時快時慢；域名若被舉報也可能被封。**只有備案是真正「穩」的。**
+**大陸直連實測（2026-10-26 20:20，不掛代理）**：
+百度 57ms（基線）／Cloudflare 596–1065ms（PoP 在 **LAX 洛杉磯**，不是香港）／GitHub Pages 502ms／
+Netlify 1021ms／`*.vercel.app` 20 秒超時（DNS 污染）／`raw.githubusercontent.com` 被封。
+
+| 方案 | 成本 | 時間 | 大陸 | 維護 | 判定 |
+|---|---|---|---|---|---|
+| A. Vercel 默認域名（現狀） | 0 | — | ❌ 0% | 無 | **死路** |
+| **D. 自己的域名 + Cloudflare Pages** | **¥60/年** | 1 小時 | ✅ 慢（0.6–1.1s） | 無 | **今晚做** |
+| C. 香港 VPS + 域名 | ¥300/年 | 1 天 | ✅ 較快（273ms 參照） | 要管機器 | 兩週後再看 |
+| B. 備案 + 國內託管 | ¥60/年 | 2–3 週 | ✅ 最快 | 無 | 不建議先做 |
+
+**B 為什麼不建議先做**：本站 703 條裡 59 條是 GitHub 連結，整個站的價值就是連回境外原帖，
+而備案站「鏈接境外平台」是第一批被要求整改的（`DEPLOY.md` 自己寫過）。
+B 可能變成「花三週，然後被要求砍掉 GitHub 那欄」。等真有人用了再說。
+
+**為啥域名在阿里雲買是對的**：境外註冊商註冊的域名不能直接備案，需轉入境內服務商。
+`.vip` 在工信部批覆後綴之列，B 的門還開著。
+
+**今晚的坑**：域名現在是 `client hold`（實名認證未通過），**認證沒過之前改 NS 不生效**。
+先確認阿里雲那頁的域名狀態是「正常」，再改 NS。
+
+工具已備好：`_headers`（CF 版 vercel.json）／`.assetsignore`（不外洩程式碼）／
+`換網址.bat`（改 og:image + canonical 並推）／`測速.bat`（直連測速）。
 
 ---
 
@@ -355,9 +384,10 @@ C:\Users\woshinidie\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\
 
 現狀：703 條（B 站 644 / GitHub 59，其中 21 條 🏆 經典）；預設近 7 天看到 510 條，
 切「近 30 天」看 682 條。最後抓取 10-26 20:10，零 412。測試全綠。
-線上：https://fish-radar-two.vercel.app/（大陸直連打不開，見第 9 節）
+線上：https://fish-radar-two.vercel.app/（Vercel 是 IP 級封鎖，大陸開不了；見第 9 節）
+新家：fishradar.vip（阿里雲買的，正在接 Cloudflare Pages，步驟見 HOSTING.md）
 
-下一步優先：域名／託管的選擇（第 9 節）；然後做準確率抽測（抽 50 條人工標對錯）。
+下一步優先：把站搬到 fishradar.vip（HOSTING.md 第五節）；然後做準確率抽測（抽 50 條人工標對錯）。
 下次開爬前，先問對面那個爬蟲停了沒有。
 
 改完 index.html 或 method.html 要跑：python localize.py && node test_render.js && python test_page.py

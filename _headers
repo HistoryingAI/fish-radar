@@ -1,0 +1,22 @@
+# Cloudflare Pages 的 HTTP 頭設定
+# 作用等於 vercel.json，但格式不一樣（CF 用這種純文字檔）
+#
+# 最重要的一條：data/ 只准快取 5 分鐘。
+# 不加這條，CF 會照預設快取，新抓的數據要等很久才看得到。
+
+/data/*
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+
+# 首頁不快取，否則推了新數據還看到舊版
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/method.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
