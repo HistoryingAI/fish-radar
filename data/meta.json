@@ -1,16 +1,16 @@
 {
- "generated_at": "2026-10-26T12:31:41+08:00",
- "took_seconds": 388.7,
+ "generated_at": "2026-10-26T20:10:35+08:00",
+ "took_seconds": 488.0,
  "window_days": 30,
  "platforms": {
   "bilibili": {
    "ok": true,
-   "count": 415,
+   "count": 429,
    "note": "公開搜索接口，按播放量 + 最新兩種排序採集"
   },
   "github": {
    "ok": true,
-   "count": 43,
+   "count": 47,
    "note": "公開 Search API，按最近更新排序"
   },
   "xiaohongshu": {
@@ -29,9 +29,9 @@
    "note": "未接入：App 接口需要動態簽名 hkey"
   }
  },
- "total": 650,
+ "total": 703,
  "automation": {
-  "last_ok": "2026-10-26T12:31:41+08:00",
+  "last_ok": "2026-10-26T20:10:35+08:00",
   "consecutive_failures": 0,
   "last_error": null
  }
