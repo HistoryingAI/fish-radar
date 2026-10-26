@@ -14,6 +14,10 @@
 *.md  text eol=lf
 *.yml text eol=lf
 
+# build.sh 是給 Cloudflare 的 Linux 跑的。存成 CRLF 會死得很難看：
+#   bash: build.sh: /bin/sh^M: bad interpreter
+*.sh  text eol=lf
+
 # 圖片二進位，別讓 git 去猜換行
 *.jpg binary
 *.png binary
