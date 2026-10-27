@@ -324,6 +324,13 @@ C:\Users\woshinidie\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\
     結果報一串完全不相干的語法錯誤（`Unexpected token '{'`）。
     **凡是含中文的 `.ps1`，一律存成 UTF-8 with BOM**（`UTF8Encoding($true)`）。
     `.bat` 不受影響，因為 `.bat` 靠 `chcp 65001` 自己宣告編碼。
+16. **`.bat` 存成純 LF = 整支腳本壞掉** → 2026-10-27 同一天踩到第二個編碼坑：
+    我用工具重寫 `更新數據.bat` / `發布.bat`，內容對，但換行變成 LF。
+    cmd 對 LF-only 的批次檔解析會錯亂：`REM 中文註解` 那行被當成指令
+    （畫面全是亂碼 + 「不是内部或外部命令」），`goto :標籤` 也抓不到。
+    **實測對照**：同一份內容，CRLF 正常跑完兩步；LF 版立刻噴三個錯。
+    **規則：改完 `.bat` 一定要檢查是純 CRLF。** `test_page.py` 第九節會擋這個。
+    （`.gitattributes` 有 `*.bat text eol=crlf`，但那只管 checkout，管不到你手寫進工作區的檔案。）
 
 ---
 

@@ -242,6 +242,24 @@ def main():
         else:
             warn("config.json 的 hide_platforms 里没有 github，GitHub 会重新出现在公开页")
 
+    print("\n九、批次檔換行（cmd 只吃 CRLF）")
+    # 2026-10-27 踩到的坑：.bat 存成純 LF，cmd 解析會錯亂——
+    # REM 那行被當成指令、「goto :標籤」抓不到，畫面上全是亂碼。
+    # 實測：同一份內容，CRLF 正常、LF 會噴 '…is not recognized as an internal or external command'。
+    bad_bat = []
+    for name in sorted(os.listdir(HERE)):
+        if not name.lower().endswith(".bat"):
+            continue
+        data = open(os.path.join(HERE, name), "rb").read()
+        lf = data.count(b"\n")
+        crlf = data.count(b"\r\n")
+        if lf == 0 or lf != crlf:
+            bad_bat.append("%s（LF %d / CRLF %d）" % (name, lf, crlf))
+    if bad_bat:
+        bad("這些 .bat 不是純 CRLF，cmd 會把中文註解當指令：%s" % "、".join(bad_bat))
+    else:
+        ok("所有 .bat 都是純 CRLF")
+
     print("\n" + "=" * 52)
     if fails:
         print("不通过：%d 项失败，%d 项警告" % (len(fails), len(warns)))
