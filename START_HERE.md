@@ -166,11 +166,26 @@ index.html 讀 posts_top.js / posts_rest.js
 - **B 站節奏**：一條影片的上升期約 24–48 小時，6 小時一採，正好切出 4–8 個取樣點
 - **避開危險窗**：實測 412 全部落在 09:41–12:07，所以 12 點那一格故意錯開到 13 點
 
-裝法：**雙擊 `安裝排程.bat`**（我這邊的沙箱建不了計畫任務，schtasks 被擋）。
-它會建 4 個任務 `FishRadar-0800 / 1300 / 1800 / 2300`，隨時可用 `移除排程.bat` 刪掉。
+裝法：**雙擊 `安裝排程.bat`**。它會呼叫 `_排程.ps1`，建 4 個任務
+`FishRadar-0800 / 1300 / 1800 / 2300`，隨時可用 `移除排程.bat` 刪掉。
 
-每次跑什麼：`collect.py` →（成功才）`git add data/` → commit → push → Vercel 30 秒後自己部署。
+> **2026-10-27 換掉 schtasks 的原因**：舊版用 `schtasks /Create`，它**沒有**「錯過補跑」和
+> 「睡眠喚醒」這兩個開關。實際後果：08:00 那輪電腦睡著 → 永遠不跑，而且不會補。
+> 當天的證據：任務的 `Last Run Time` 是 11:06（不是 08:00），`Last Result` 是失敗碼。
+> 現在用 PowerShell 的 `Register-ScheduledTask`，帶
+> `-StartWhenAvailable`（錯過補跑）＋ `-WakeToRun`（睡眠喚醒）＋ `IgnoreNew`（不疊加）。
+
+> ⚠️ **計畫任務只在「你登入著」時跑**（`Logon Mode: Interactive only`）。電腦關機那幾輪不會跑，
+> 但 `StartWhenAvailable` 會在下次開機後補一次。所以「一天 4 次」實際上是「最多 4 次」。
+
+每次跑什麼：`collect.py` →（成功才）`git add data/` → commit → push → Cloudflare Pages 30 秒後自己部署。
 日誌：`logs/update.log`（已在 `.gitignore` 裡，不進倉庫）。
+
+**推送失敗會自動重試一次**（2026-10-27 加）：計畫任務裡偶爾會報
+`schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS`——
+那是 Windows 的 TLS 庫在這個上下文拿不到憑證。第二次改用
+`git -c http.sslBackend=openssl push`（Git 自帶的 OpenSSL 後端），實測能過 TLS。
+兩次都失敗才放棄，資料留在本機，下一輪會再試。
 
 **失敗不會推送**——寧可頁面停在上一版，也不上線一份被 412 攔了一半的數據；下一輪會補。
 
@@ -231,6 +246,7 @@ C:\Users\woshinidie\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\
 | `推送.bat` | 雙擊推送**所有**本機提交（改了 html/md 之後用） | ✅ |
 | `自動更新.bat` | 給計畫任務調用的：抓 → 成功才提交 → 推。日誌在 `logs/update.log` | ✅ 別手改流程 |
 | `安裝排程.bat` / `移除排程.bat` | 一鍵裝／卸 4 個每日任務 | ✅ |
+| `_排程.ps1` | 真正註冊任務的腳本（`StartWhenAvailable` ＋ `WakeToRun`）。**必須存成 UTF-8 帶 BOM** | ⚠️ 別動編碼 |
 | `collect.py` | 採集（B 站四輪 + GitHub） | ✅ |
 | `config.json` | 角色、關鍵詞、黑名單、延遲與額度節奏、經典條數、手動盯的 UP 主、**公開版屏蔽哪些平台**（`hide_platforms`） | ✅ 最常改的就是這個 |
 | `seeds.txt` | 人工指定的 B 站影片 | ✅ 搜不到的貼這裡 |
@@ -303,6 +319,11 @@ C:\Users\woshinidie\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\
     看起來像腳本壞了，其實是 Python 根本沒啟動。
     `自動更新.bat` / `更新數據.bat` 現在是「先找確定能用的那份（DSK 自帶），
     最後才退回 PATH」，而且會先 `python -c "import sys"` 驗一次才往下跑。
+15. **PowerShell 5.1 讀沒有 BOM 的 `.ps1` = 亂碼** → 2026-10-27 踩到：`_排程.ps1` 是
+    UTF-8 無 BOM 存的，裡面有中文，PowerShell 5.1 當成 ANSI(GBK) 讀，中文字節把引號吃掉了，
+    結果報一串完全不相干的語法錯誤（`Unexpected token '{'`）。
+    **凡是含中文的 `.ps1`，一律存成 UTF-8 with BOM**（`UTF8Encoding($true)`）。
+    `.bat` 不受影響，因為 `.bat` 靠 `chcp 65001` 自己宣告編碼。
 
 ---
 

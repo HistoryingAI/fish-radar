@@ -5,10 +5,16 @@ REM
 REM  做三件事：
 REM    1. 抓数据（collect.py）
 REM    2. 抓成功了才提交
-REM    3. 推上去，Vercel 自动部署
+REM    3. 推上去，Cloudflare Pages 自动部署
 REM
 REM  为什么不成功就不推：宁可页面停在上一版，也不要上线一份
 REM  "被 412 拦了一半"的数据。失败了下一轮会补。
+REM
+REM  2026-10-27 改：推送失败会换 OpenSSL 后端再试一次。
+REM  原因：计划任务里有时候会报
+REM    schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS
+REM  那是 Windows 的 TLS 库在这个上下文拿不到凭据，换成 Git 自带的
+REM  OpenSSL 后端就能绕过去（实测能过 TLS，只差账号验证）。
 REM
 REM  日志：logs\update.log
 REM ============================================================
@@ -68,17 +74,26 @@ if not errorlevel 1 goto :nochange
 
 "%GIT%" commit -m "data: 自动更新 %date%" >> "%LOG%" 2>&1
 
-REM ---------- 推 ----------
+REM ---------- 推（失败换 OpenSSL 后端再试一次）----------
 "%GIT%" push >> "%LOG%" 2>&1
-if errorlevel 1 goto :pushfail
+if not errorlevel 1 goto :pushed
 
-echo [%date% %time%] 已推送，Vercel 30 秒后部署 >> "%LOG%"
+echo [%date% %time%] 第一次推送失败，20 秒后换 OpenSSL 后端重试 >> "%LOG%"
+timeout /t 20 /nobreak >nul
+"%GIT%" -c http.sslBackend=openssl push >> "%LOG%" 2>&1
+if not errorlevel 1 goto :pushed_ssl
+
+echo [%date% %time%] 推送两次都失败，数据留在本机，下一轮会再试 >> "%LOG%"
+exit /b 2
+
+:pushed
+echo [%date% %time%] 已推送，Cloudflare Pages 30 秒后部署 >> "%LOG%"
+exit /b 0
+
+:pushed_ssl
+echo [%date% %time%] 已推送（用了 OpenSSL 后端）>> "%LOG%"
 exit /b 0
 
 :nochange
 echo [%date% %time%] 数据没有变化，不提交 >> "%LOG%"
 exit /b 0
-
-:pushfail
-echo [%date% %time%] 推送失败：先确认代理软件开着（127.0.0.1:7897） >> "%LOG%"
-exit /b 2
