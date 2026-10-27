@@ -1,4 +1,12 @@
 @echo off
+REM ============================================================
+REM  肥鱼雷达 · 抓取最新数据（手动）
+REM
+REM  2026-10-27 改：抓到之后会问你要不要顺手推上去。
+REM  原因：以前两个按钮分工是「更新數據.bat 只抓」「發布.bat 才推」，
+REM  但名字看不出这层差别——抓完刷新网页发现没变化，很容易以为抓挂了。
+REM  现在抓完直接问，默认推。
+REM ============================================================
 chcp 65001 >nul
 cd /d "%~dp0"
 echo.
@@ -48,12 +56,90 @@ echo ============================================
 if "%RC%"=="3" (
   echo   這次沒有跑：另一個項目還在爬 B 站。
   echo   等它停了再雙擊一次，數據沒有動，不用擔心。
-) else if not "%RC%"=="0" (
+  echo ============================================
+  pause
+  exit /b 3
+)
+if not "%RC%"=="0" (
   echo   跑完了，但出了問題（代碼 %RC%）。
   echo   數據沒有被破壞，上一次的還在。詳情看上面的訊息。
-) else (
-  echo   完成。双击 index.html 查看结果。
+  echo ============================================
+  pause
+  exit /b %RC%
 )
+echo   抓取完成。
 echo ============================================
+echo.
+
+REM ---------- 要不要推上去 ----------
+set "ANS="
+set /p "ANS=  要现在推上去、让网站也更新吗？（直接 Enter = 要，打 n = 只留在本机） "
+if /i "%ANS%"=="n" goto :localonly
+
+set "GIT="
+where git >nul 2>nul && set "GIT=git"
+if not defined GIT if exist "%ProgramFiles%\Git\cmd\git.exe" set "GIT=%ProgramFiles%\Git\cmd\git.exe"
+if not defined GIT if exist "%ProgramFiles(x86)%\Git\cmd\git.exe" set "GIT=%ProgramFiles(x86)%\Git\cmd\git.exe"
+if not defined GIT goto :nogit
+
+"%GIT%" add data/
+"%GIT%" diff --cached --quiet
+if not errorlevel 1 goto :nochange
+
+"%GIT%" commit -m "data: 手动更新" >nul 2>&1
+"%GIT%" push
+if not errorlevel 1 goto :pushed
+
+echo.
+echo   第一次推送失败，20 秒后换 OpenSSL 后端再试一次...
+timeout /t 20 /nobreak >nul
+"%GIT%" -c http.sslBackend=openssl push
+if not errorlevel 1 goto :pushed_ssl
+
+echo.
+echo [错误] 推送两次都失败。数据已经存在本机，没有丢。
+echo   最常见的原因：代理软件没开（127.0.0.1:7897）。
+echo   开好代理后，双击 推送.bat 就能补推。
+echo.
 pause
-exit /b %RC%
+exit /b 2
+
+:pushed
+echo.
+echo   推上去了。等 30 秒 Cloudflare 自动部署，然后按 Ctrl+F5 强制刷新网页。
+echo.
+pause
+exit /b 0
+
+:pushed_ssl
+echo.
+echo   推上去了（用了 OpenSSL 后端）。等 30 秒 Cloudflare 自动部署，然后 Ctrl+F5。
+echo.
+pause
+exit /b 0
+
+:nochange
+echo.
+echo   数据没有变化，不用推。
+echo.
+pause
+exit /b 0
+
+:localonly
+echo.
+echo   好，只留在本机。要看效果就双击 index.html。
+echo   要上线的时候，双击 發布.bat。
+echo.
+pause
+exit /b 0
+
+:nogit
+echo.
+echo   数据抓好了，但找不到 git，所以还没推上去。
+echo   手动跑这三行（在 fish-radar 文件夹里）：
+echo       git add data/
+echo       git commit -m "data"
+echo       git push
+echo.
+pause
+exit /b 0
