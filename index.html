@@ -389,7 +389,7 @@
       <div class="logo">🐋</div>
       <div>
         <h1>肥魚雷達 <span>FISH RADAR</span></h1>
-        <p class="sub">AI 娘二創 · 全網熱帖聚合 · 每一條都連回原帖</p>
+        <p class="sub">AI 娘二創 · B 站熱帖聚合 · 每一條都連回原帖</p>
         <a class="mlink" href="method.html">分類方法 · 它會錯在哪 →</a>
       </div>
     </div>
@@ -465,7 +465,7 @@
       <div>
         <h4>數據怎麼更新</h4>
         雙擊資料夾裡的 <code>更新數據.bat</code>，等一分鐘，再重新整理這一頁就行。
-        想讓它每天自己跑，把整個資料夾丟上 GitHub，用免費的 Actions 定時執行（說明見 <code>README.txt</code>）。
+        本機也裝了排程（一天 4 次），推上去 Cloudflare Pages 會自己部署（說明見 <code>README.txt</code>）。
       </div>
       <div>
         <h4>版權</h4>
@@ -502,7 +502,7 @@
   var REST_LOADED = false;
   var REST_FAILED = false;
   // 公開版只放 B 站。
-  // GitHub 的內容搬到本機的「本機-GitHub.html」：大陸打不開，公開頁只會多出一排死鏈。
+  // GitHub 的內容只在本機看：大陸打不開，公開頁只會多出一排死鏈。
   // 以後要加平台，在這裡加一筆就好——下面的篩選、統計、卡片都是「有幾個畫幾個」。
   var PLAT = {
     bilibili: {name:"B 站", cls:"b-bilibili", icon:"📺", live:true}
@@ -590,7 +590,7 @@
 
   // 公開版可以整批屏蔽平台（config.json 的 hide_platforms）。
   // 現在的用法：把 github 擋掉——大陸打不開，公開頁只會多出一排死鏈；
-  // 那批內容改在本機的「本機-GitHub.html」看，不上線。
+  // 那批內容改在本機看，不上線。
   // 這裡只是「不畫」，posts.json 裡資料還在——想恢復，把 config 那個陣列清空再跑一次 split。
   var HIDDEN_PLAT = (META && META.hidden_platforms) || [];
   var PLAT_KEYS = Object.keys(PLAT).filter(function(k){ return HIDDEN_PLAT.indexOf(k) < 0; });
