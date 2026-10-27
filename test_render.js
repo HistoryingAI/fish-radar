@@ -42,8 +42,8 @@ function makeEl(id) {
   return e;
 }
 
-const ids = ["notice", "chars", "plats", "when", "rel", "view", "csv", "loadhint",
-             "stats", "flow", "cols", "mask", "modal", "stamp", "window", "took",
+const ids = ["notice", "chars", "plats", "when", "rel", "csv", "loadhint",
+             "stats", "flow", "mask", "modal", "stamp", "window", "took",
              "closeX", "closeB", "langBtn", "themeBtn", "promo",
              "q", "qbox", "qclear", "sort", "stale"];
 const store = {};
@@ -111,6 +111,29 @@ else bad("没有「▶ 載入更多」按钮");
 const m1 = store.flow.innerHTML.match(/已顯示 (\d+) \/ (\d+) 條/);
 if (m1 && m1[1] === "20") ok(`进度显示正确：已顯示 ${m1[1]} / ${m1[2]} 條`);
 else bad("进度显示不对：" + (m1 ? m1[0] : "没找到"));
+
+// ---------- 平台只剩 B 站（2026-10-27 的決定） ----------
+console.log("\n一之二、平台只剩 B 站");
+const platHtml = store.plats.innerHTML;
+if (/B 站/.test(platHtml) && !/小紅書|推特|小黑盒|GitHub/.test(platHtml)) {
+  ok("平台欄只剩 B 站");
+} else {
+  bad("平台欄還有別的平台：" + platHtml.replace(/\s+/g, " ").slice(0, 120));
+}
+if (/data-p="bilibili"/.test(platHtml) && !/未接入|dead/.test(platHtml)) {
+  ok("沒有灰掉的「未接入」按鈕");
+} else {
+  bad("还留着未接入的灰按鈕");
+}
+
+const statHtml = store.stats.innerHTML;
+if (/強相關/.test(statHtml) && !/GitHub/.test(statHtml)) {
+  ok("統計卡改成強／弱相關拆分（不再有平台分欄）");
+} else {
+  bad("統計卡不對：" + statHtml.replace(/\s+/g, " ").slice(0, 160));
+}
+if (!/分平台榜/.test(html)) ok("分平台榜已移除");
+else bad("还留着分平台榜");
 
 // ---------- 点「加载更多」 ----------
 // 注意：这一刻全量还没载入，手上只有首屏 30 条，所以点一次就到顶了。

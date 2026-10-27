@@ -21,3 +21,7 @@ desktop.ini
 
 # Cloudflare Pages 建置產物（build.sh 產生，不進倉庫）
 dist/
+
+# 本機专用：GitHub 那条清单（本機-GitHub.html 读它），故意不进仓库。
+# 不进去，就算哪天 Cloudflare 部署了整包，公开网上也是一个空页面。
+data/github_local.js

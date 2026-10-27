@@ -1,6 +1,6 @@
 {
   "window_days": 30,
-  "hide_platforms": [],
+  "hide_platforms": ["github"],
   "guard": {
     "enabled": true,
     "other_db": "../ai-film-radar/data/radar.db",

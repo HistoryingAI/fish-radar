@@ -55,14 +55,19 @@ def build(top_n=TOP_N, window_days=WINDOW_DAYS, quiet=False):
         doc = json.load(f)
 
     meta = doc.get("meta", {})
-    posts = doc.get("posts", [])
+    all_posts = doc.get("posts", [])
 
     # 公開版可以整批屏蔽平台（config.json 的 hide_platforms）。
-    # 典型用法：上線前把 github 加進去——大陸多數人打不開，留著只是一排死鏈。
-    # 只影響「寫給網頁的檔案」，posts.json 這份抓取緩存不動，本地照樣能看全量。
+    # 現在的用法：把 github 擋掉——大陸打不開，公開頁只會多出一排死鏈。
+    # 被擋掉的帖子和我們沒關係，只是不進「寫給網頁的檔案」，posts.json 這份抓取緩存不動。
+    # 另外會另存一份 data/github_local.js，給本機的「本機-GitHub.html」看，那個檔案不部署。
     hidden = [str(x) for x in (load_config().get("hide_platforms") or [])]
     if hidden:
-        posts = [p for p in posts if p.get("platform") not in hidden]
+        posts = [p for p in all_posts if p.get("platform") not in hidden]
+        hidden_posts = [p for p in all_posts if p.get("platform") in hidden]
+    else:
+        posts = all_posts
+        hidden_posts = []
 
     # 默认视图 = 近 7 天 + 全部相关度，按热度降序
     cutoff = time.time() - window_days * 86400
@@ -80,6 +85,8 @@ def build(top_n=TOP_N, window_days=WINDOW_DAYS, quiet=False):
 
     # meta 里带上全量统计，这样首屏的统计卡一上来就是对的数字
     meta_out = dict(meta)
+    # meta.total 要跟著屏蔽後的口徑走，否則首屏檔裡寫著 703、畫面只算得出 644
+    meta_out["total"] = len(posts)
     meta_out["split"] = {
         "top": len(top),
         "rest": len(rest),
@@ -88,6 +95,19 @@ def build(top_n=TOP_N, window_days=WINDOW_DAYS, quiet=False):
     }
     if hidden:
         meta_out["hidden_platforms"] = hidden
+    # meta.platforms 只留「公開頁真的會用到的」：
+    #   被屏蔽的平台（github）、以及從來沒接入過的空殼（小紅書／推特／小黑盒，count=0 且 ok=false）。
+    # 不這樣清，首屏檔案裡還是能看到那幾個平台的名字——畫面不畫，但字還在。
+    plats = meta_out.get("platforms")
+    if isinstance(plats, dict):
+        keep = {}
+        for k, v in plats.items():
+            if k in hidden:
+                continue
+            v = v if isinstance(v, dict) else {}
+            if v.get("count") or v.get("ok") is not False:
+                keep[k] = v
+        meta_out["platforms"] = keep
 
     def dump(path, varname, payload):
         fsutil.write_text(
@@ -100,6 +120,20 @@ def build(top_n=TOP_N, window_days=WINDOW_DAYS, quiet=False):
               {"meta": meta_out, "posts": top})
     n2 = dump(os.path.join(DATA, "posts_rest.js"), "FISH_RADAR_REST",
               {"posts": rest})
+
+    # 本機專用：被屏蔽的平台另存一份，給「本機-GitHub.html」看。
+    # 這個檔案**不會**被 build.sh 放進 dist/，所以不會上線，也搜不到。
+    local_posts = sorted(hidden_posts, key=lambda p: (-(p.get("heat") or 0),
+                                                      -(p.get("published_ts") or 0)))
+    fsutil.write_text(
+        os.path.join(DATA, "github_local.js"),
+        "/* 由 split_posts.py 生成；本機專用，不要部署到網路上 */\n"
+        "window.FISH_RADAR_LOCAL = " + json.dumps({
+            "generated_at": meta.get("generated_at"),
+            "platforms": hidden,
+            "count": len(local_posts),
+            "posts": local_posts,
+        }, ensure_ascii=False) + ";\n")
 
     # 方法頁頂部那五個數字：跟最終的 posts.json 一起算，所以永遠不會過期。
     stats = {

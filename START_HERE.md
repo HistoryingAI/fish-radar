@@ -13,9 +13,10 @@ C:\Users\woshinidie\Documents\deepseek-harness\default-workspace\fish-radar
 
 ## 0. 一句話
 
-把 B 站 + GitHub 上關於 AI 娘（DeepSeek 娘／大肥魚、Claude 娘、GPT 娘、Grok 娘、
+把 B 站上關於 AI 娘（DeepSeek 娘／大肥魚、Claude 娘、GPT 娘、Grok 娘、
 Gemini 娘、Kimi 娘、豆包娘、千問娘）的**二創熱帖**聚合成一個靜態看板，
 每條都連回原帖，不搬運任何圖片本體。
+GitHub 的倉庫也照抓，但只放在本機的 `本機-GitHub.html`，不上公開頁。
 
 使用者是文科生，只會跟 AI 對話，不會寫程式。**所有操作都要能「雙擊」或「一行命令」完成**，
 解釋要用白話，不要假設他看得懂程式碼。
@@ -25,8 +26,10 @@ Gemini 娘、Kimi 娘、豆包娘、千問娘）的**二創熱帖**聚合成一�
 ## 1. 三條鐵律（違反即返工）
 
 **① 不拿假數據填坑。**
-小紅書、推特 X、小黑盒這三個平台**沒有接入**，網頁上按鈕是灰的、欄位寫著原因。
-不要為了畫面好看去編造內容。抓不到就說抓不到。
+（2026-10-27 改）小紅書、推特 X、小黑盒**從來沒接入**，公開頁上**根本不顯示**它們——
+不再有灰色按鈕，也不留「未接入」的空欄位。寧可少一欄，也不要為了畫面好看去編造。
+GitHub 有在抓，但**只在本機的 `本機-GitHub.html` 看**，公開頁不放（大陸打不開，且是一排死鏈）。
+抓不到就說抓不到。
 
 **② 不在別人的爬蟲在跑的時候開爬。**
 使用者還有另一個專案 `ai-film-radar` 也在爬 B 站。兩個同時跑 = 請求翻倍 = 412 來得更快。
@@ -43,9 +46,9 @@ Gemini 娘、Kimi 娘、豆包娘、千問娘）的**二創熱帖**聚合成一�
 | 項目 | 數值 |
 |---|---|
 | **線上網址** | **https://fish-radar-two.vercel.app/** |
-| 榜上條目 | **703**（B 站 644 / GitHub 59，其中 🏆 經典 21） |
-| 檢視：近 7 天 | **510** 條（預設看到的） |
-| 檢視：近 30 天 | **682** 條 |
+| 榜上條目 | **644**（全部是 B 站，其中 🏆 經典 21）　·　原始資料另有 59 條 GitHub，只在本機看 |
+| 檢視：近 7 天 | **454** 條（預設看到的） |
+| 檢視：近 30 天 | **622** 條 |
 | 最後抓取 | **2026-10-26 20:10**（零 412，耗時 488 秒） |
 | 採集窗口 | **30 天**（`config.json` 的 `window_days`，可用 `--days` 臨時覆蓋） |
 | 首屏 | 30 條 / 29.0 KB，其餘 673 條 / 592.8 KB 異步補 |
@@ -219,7 +222,9 @@ C:\Users\woshinidie\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\
 | `vercel.json` | Vercel 快取：`data/` 只緩存 5 分鐘，不然新數據會被舊快取蓋住 | ✅ 少動 |
 | `HOSTING.md` | **託管決策書**：為什麼搬、實測數據、今晚的操作順序與坑 | ✅ |
 | `_headers` | Cloudflare 版的 `vercel.json`（CF 用純文字檔，不吃 json） | ✅ 少動 |
-| `.assetsignore` | Cloudflare 不公開的檔案（`*.py`／`*.bat`／`*.md`／`vendor/`／`logs/`） | ✅ |
+| `.assetsignore` | ~~Cloudflare 不公開的檔案~~ ❌ **已刪**：Pages 不讀這個檔（實測無效），改用 `build.sh` | ❌ 別再加回來 |
+| `build.sh` | Cloudflare Pages 的建置腳本：只挑 10 個檔案進 `dist/`，`.py`／`.bat`／內部筆記都不上線 | ✅ 少動 |
+| `本機-GitHub.html` | **只在電腦上開**：GitHub 那 59 條的清單（noindex，`build.sh` 不會部署它） | ✅ |
 | `換網址.bat` | 雙擊：把 `og:image`／`canonical` 改成新域名並推送 | ✅ |
 | `測速.bat`／`測速.js` | 雙擊：不掛代理，直連測「百度／你的網址／舊 Vercel」 | ✅ |
 | `發布.bat` | 雙擊把 `data/` 推上 GitHub，Vercel 自動部署 | ✅ |
@@ -235,8 +240,9 @@ C:\Users\woshinidie\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\
 | `make_og.py` / `set_og.py` | 分享圖 / 絕對網址 | ✅ |
 | `fsutil.py` | 原子寫（`.tmp` → `os.replace`），collect / localize / split / set_og 共用 | ✅ 別刪，刪了四個腳本都跑不動 |
 | `test_render.js` / `test_page.py` | 測試 | ✅ |
-| `data/posts.json` | 原始數據 | ❌ 生成物 |
-| `data/posts_top.js` / `posts_rest.js` | 網頁用的數據 | ❌ 生成物 |
+| `data/posts.json` | 原始數據（**含 GitHub 那 59 條**，全量） | ❌ 生成物 |
+| `data/posts_top.js` / `posts_rest.js` | 網頁用的數據（只含 B 站，`hide_platforms` 已經過濾） | ❌ 生成物 |
+| `data/github_local.js` | 本機專用：GitHub 那 59 條，`本機-GitHub.html` 讀它。**不部署** | ❌ 生成物 |
 | `data/i18n.js` | 界面簡繁字表 | ❌ 生成物 |
 | `data/health.json` | 自動跑的體檢紀錄：最後成功時間、連續失敗次數、上次錯誤 | ❌ 生成物 |
 | `data/stats.js` | 方法頁頂部五個數字的來源（跟最終 posts.json 一致） | ❌ 生成物 |
@@ -255,7 +261,9 @@ C:\Users\woshinidie\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\
 - **簡繁切換**：界面走 119 字對照表，標題走預轉的 `title_t`，記住選擇
 - **深淺色**：記住選擇，淺色不是簡單反白，通知條／統計卡／彈窗都單獨調過
 - **數據過舊提醒**：>24 小時黃條，>72 小時橘紅加重
-- **來源小標**：🔎 搜尋 / 🕸 相關推薦 / 👤 UP 主 / 📌 手動釘選 / 🐙 GitHub
+- **來源小標**：🔎 搜尋 / 🕸 相關推薦 / 👤 UP 主 / 📌 手動釘選
+- **平台只有 B 站**（2026-10-27 起）：平台欄是一個 B 站 chip，沒有紅書／推特／小黑盒的灰按鈕，
+  也沒有「分平台榜」那個視圖。GitHub 的 59 條退到本機 `本機-GitHub.html`，公開頁不放
 - **推廣位**：讀 `promos.js`，外鏈新開分頁，無 iframe
 - CSV 導出當前篩選結果、og:image + 分享卡、頁尾免責聲明
 - **🏆 經典**：每角色按播放量前 6 條、不限時間，卡片上有金標；預設不顯示，切「全部時間」才出現
@@ -353,9 +361,10 @@ Netlify 1021ms／`*.vercel.app` 20 秒超時（DNS 污染）／`raw.githubuserco
 | C. 香港 VPS + 域名 | ¥300/年 | 1 天 | ✅ 較快（273ms 參照） | 要管機器 | 兩週後再看 |
 | B. 備案 + 國內託管 | ¥60/年 | 2–3 週 | ✅ 最快 | 無 | 不建議先做 |
 
-**B 為什麼不建議先做**：本站 703 條裡 59 條是 GitHub 連結，整個站的價值就是連回境外原帖，
-而備案站「鏈接境外平台」是第一批被要求整改的（`DEPLOY.md` 自己寫過）。
-B 可能變成「花三週，然後被要求砍掉 GitHub 那欄」。等真有人用了再說。
+**B 為什麼不建議先做**：備案流程本身 2–3 週，而且「鏈接境外平台」是備案站第一批被要求整改的項目
+（`DEPLOY.md` 自己寫過）。
+不過這一條**在 2026-10-27 已經先處理掉了**——公開頁現在完全不含 GitHub 連結，
+所以 B 剩下的風險只剩流程本身，不再有「花三週然後被要求砍欄」那件事。等真有人用了再說。
 
 **為啥域名在阿里雲買是對的**：境外註冊商註冊的域名不能直接備案，需轉入境內服務商。
 `.vip` 在工信部批覆後綴之列，B 的門還開著。
@@ -363,7 +372,7 @@ B 可能變成「花三週，然後被要求砍掉 GitHub 那欄」。等真有�
 **今晚的坑**：域名現在是 `client hold`（實名認證未通過），**認證沒過之前改 NS 不生效**。
 先確認阿里雲那頁的域名狀態是「正常」，再改 NS。
 
-工具已備好：`_headers`（CF 版 vercel.json）／`.assetsignore`（不外洩程式碼）／
+工具已備好：`build.sh`（CF 建置，只發布必要檔案）／`_headers`（CF 版 vercel.json）／
 `換網址.bat`（改 og:image + canonical 並推）／`測速.bat`（直連測速）。
 
 ---
@@ -371,25 +380,28 @@ B 可能變成「花三週，然後被要求砍掉 GitHub 那欄」。等真有�
 ## 10. 新窗口開場白（直接貼）
 
 ```
-我們在做「肥魚雷達」：把 B 站 + GitHub 的 AI 娘二創熱帖聚合成靜態看板，
+我們在做「肥魚雷達」：把 B 站的 AI 娘二創熱帖聚合成靜態看板，
 每條連回原帖，不搬運圖片。使用者是文科生，只會跟 AI 對話。
+（GitHub 的倉庫照抓，但只在本機的 本機-GitHub.html 看，公開頁不放。）
 
 目錄：C:\Users\woshinidie\Documents\deepseek-harness\default-workspace\fish-radar
 先讀 START_HERE.md，不要讀舊對話。
 
 三條鐵律：
-1. 小紅書／推特／小黑盒沒接入，不要放假數據填那三欄。
+1. 小紅書／推特／小黑盒沒接入——公開頁直接不顯示它們，也不要放假數據去填。
 2. 我還有另一個專案 ai-film-radar 在爬 B 站，開爬前先問我對面停了沒有。
 3. 推廣位只做超連結（target=_blank），絕不用 iframe。
 
-現狀：703 條（B 站 644 / GitHub 59，其中 21 條 🏆 經典）；預設近 7 天看到 510 條，
-切「近 30 天」看 682 條。最後抓取 10-26 20:10，零 412。測試全綠。
+現狀：公開版 644 條（全部 B 站，其中 21 條 🏆 經典）；預設近 7 天看到 454 條，
+切「近 30 天」看 622 條。最後抓取 10-26 20:10，零 412。測試全綠。
+GitHub 那 59 條不在公開頁，只在電腦上開 本機-GitHub.html 看。
 線上：https://fish-radar-two.vercel.app/（Vercel 是 IP 級封鎖，大陸開不了；見第 9 節）
-新家：fishradar.vip（阿里雲買的，正在接 Cloudflare Pages，步驟見 HOSTING.md）
+試跑：https://fish-radar.pages.dev/（Cloudflare，大陸直連約 1 秒）
+新家：fishradar.vip（阿里雲買的，等實名認證過 → 改 NS → 綁上去，步驟見 HOSTING.md）
 
 下一步優先：把站搬到 fishradar.vip（HOSTING.md 第五節）；然後做準確率抽測（抽 50 條人工標對錯）。
 下次開爬前，先問對面那個爬蟲停了沒有。
 
 改完 index.html 或 method.html 要跑：python localize.py && node test_render.js && python test_page.py
-（動了數據才需要 python split_posts.py）
+（動了數據、或改了 config.json 的 hide_platforms，要 python split_posts.py）
 ```

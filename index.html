@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>肥魚雷達 · FISH RADAR — AI 娘二創全網熱帖聚合</title>
+<title>肥魚雷達 · FISH RADAR — AI 娘二創熱帖聚合</title>
 <link rel="canonical" href="https://fish-radar-two.vercel.app/">
-<meta name="description" content="把 B 站、GitHub 上關於 DeepSeek 娘、Claude 娘、GPT 娘等 AI 娘的二次創作熱帖聚合到一頁。只存標題、作者、熱度與原帖連結，點擊回原帖。">
+<meta name="description" content="把 B 站上關於 DeepSeek 娘、Claude 娘、GPT 娘等 AI 娘的二次創作熱帖聚合到一頁。只存標題、作者、熱度與原帖連結，點擊回原帖。">
 <meta name="theme-color" content="#070d18">
 <!-- 分享卡片。上線後要把 og:image 改成絕對網址，微信／B 站只抓絕對地址 -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="肥魚雷達 FISH RADAR — AI 娘二創全網熱帖聚合">
-<meta property="og:description" content="B 站 + GitHub 的 AI 娘二創熱帖，分平台排序，每條都連回原帖。">
+<meta property="og:title" content="肥魚雷達 FISH RADAR — AI 娘二創熱帖聚合">
+<meta property="og:description" content="B 站的 AI 娘二創熱帖，按熱度排序，每條都連回原帖。">
 <meta property="og:image" content="https://fish-radar-two.vercel.app/og-cover.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://fish-radar-two.vercel.app/og-cover.jpg">
@@ -155,10 +155,6 @@
     font-weight:700;letter-spacing:.4px;backdrop-filter:blur(6px)
   }
   .b-bilibili{background:rgba(251,114,153,.88);color:#2b0512}
-  .b-github{background:rgba(215,225,240,.9);color:#0b1626}
-  .b-xhs{background:rgba(255,45,85,.9);color:#fff}
-  .b-twitter{background:rgba(29,161,242,.9);color:#fff}
-  .b-heybox{background:rgba(255,196,0,.9);color:#231a00}
   .rel{
     position:absolute;top:9px;right:9px;z-index:2;font-size:10px;padding:3px 8px;border-radius:6px;
     background:rgba(0,0,0,.55);color:#9fd9ff;border:1px solid rgba(120,200,255,.3)
@@ -185,22 +181,8 @@
   }
   .go:hover{background:rgba(76,201,240,.14)}
 
-  /* ---------- 分平台榜 ---------- */
-  .cols{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
-  @media(max-width:1180px){.cols{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  @media(max-width:720px){.cols{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
-  .col{background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:13px;padding:11px}
-  .col-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-  .col-h .nm{font-size:13px;font-weight:700}
-  .col-h .ct{font-size:10.5px;color:var(--dim2)}
-  .mini{
-    display:flex;gap:9px;padding:8px 6px;border-radius:9px;cursor:pointer;transition:.15s;
-    text-decoration:none;color:inherit
-  }
-  .mini:hover{background:rgba(76,201,240,.08)}
-  .mini .rk{font-size:11px;color:var(--dim2);font-weight:800;width:15px;flex:none;padding-top:2px}
-  .mini .t{font-size:12px;line-height:1.45;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-  .mini .h{font-size:10.5px;color:var(--hot);margin-top:3px}
+  /* ---------- 空狀態 ---------- */
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
   .emptycol{padding:26px 8px;text-align:center;color:var(--dim2);font-size:11.5px;line-height:1.7}
 
   /* ---------- 弹窗 ---------- */
@@ -284,7 +266,6 @@
   body[data-theme="light"] .thumb{background:linear-gradient(135deg,#e6eefb,#d9e5f6)}
   body[data-theme="light"] .chip{background:rgba(20,60,110,.045)}
   body[data-theme="light"] .chip.on{color:#fff}
-  body[data-theme="light"] .mini:hover{background:rgba(30,110,200,.07)}
   body[data-theme="light"] .modal{background:linear-gradient(180deg,#ffffff,#f5f9ff)}
   body[data-theme="light"] .mask{background:rgba(232,240,250,.82)}
   body[data-theme="light"] .why{background:rgba(30,110,200,.07);color:#1c3a5e}
@@ -297,7 +278,6 @@
   }
   body[data-theme="light"] .notice b{color:#95530a}
   body[data-theme="light"] .stat{background:rgba(20,60,110,.032)}
-  body[data-theme="light"] .col{background:rgba(20,60,110,.025)}
   body[data-theme="light"] .kv td{border-bottom-color:rgba(24,64,120,.10)}
   body[data-theme="light"] .navbtn{background:rgba(20,60,110,.05)}
 
@@ -425,14 +405,8 @@
   <!-- 推廣位：内容来自 promos.js，都是 target="_blank" 的普通超链接，没有 iframe -->
   <section class="promos" id="promo"></section>
 
-  <div class="notice" id="notice">
-    <span class="i">⚠️</span>
-    <span>
-      <b>目前只真的抓了 B 站和 GitHub。</b>
-      小紅書、推特、小黑盒這三個平台的按鈕是灰的——它們需要登錄態或動態簽名，這一版<strong>沒有</strong>接，也沒有拿假數據去填。
-      灰掉的欄位裡寫的是原因，不是演示內容。
-    </span>
-  </div>
+  <!-- 預設隱藏：只有「沒抓到數據」或「這輪某個平台沒抓成」時才填內容進來 -->
+  <div class="notice" id="notice" style="display:none"></div>
 
   <section class="console">
     <div class="row">
@@ -469,10 +443,6 @@
         <button data-r="weak" class="on">全部相關</button>
         <button data-r="strong">只看強相關</button>
       </div>
-      <div class="toggle" id="view">
-        <button data-v="flow" class="on">卡片流</button>
-        <button data-v="cols">分平台榜</button>
-      </div>
       <button class="chip" id="csv" title="把目前篩選出來的結果存成 Excel 能開的檔案">⬇ 導出 CSV</button>
     </div>
   </section>
@@ -484,14 +454,13 @@
   <section class="stats" id="stats"></section>
 
   <section id="flow" class="grid"></section>
-  <section id="cols" class="cols" style="display:none"></section>
 
   <footer>
     <div class="fnote">
       <div>
         <h4>這些數字是真的嗎</h4>
-        B 站的播放／彈幕／收藏、GitHub 的 Star／Fork，都是抓取當下接口回傳的原值，沒有加權、沒有換算、沒有編造。
-        兩個平台的熱度<strong>不能互相關公比大小</strong>，所以只分平台排，不做總榜。
+        B 站的播放／彈幕／收藏，都是抓取當下接口回傳的原值，沒有加權、沒有換算、沒有編造。
+        公開版只放 B 站，其他平台的內容不會出現在這一頁。
       </div>
       <div>
         <h4>數據怎麼更新</h4>
@@ -532,12 +501,11 @@
   var DATA = window.FISH_RADAR_TOP || null;
   var REST_LOADED = false;
   var REST_FAILED = false;
+  // 公開版只放 B 站。
+  // GitHub 的內容搬到本機的「本機-GitHub.html」：大陸打不開，公開頁只會多出一排死鏈。
+  // 以後要加平台，在這裡加一筆就好——下面的篩選、統計、卡片都是「有幾個畫幾個」。
   var PLAT = {
-    bilibili:    {name:"B 站",      cls:"b-bilibili", icon:"📺", live:true},
-    github:      {name:"GitHub",    cls:"b-github",   icon:"🐙", live:true},
-    xiaohongshu: {name:"小紅書",     cls:"b-xhs",      icon:"📕", live:false},
-    twitter:     {name:"推特 X",     cls:"b-twitter",  icon:"🐦", live:false},
-    heybox:      {name:"小黑盒",     cls:"b-heybox",   icon:"🎮", live:false}
+    bilibili: {name:"B 站", cls:"b-bilibili", icon:"📺", live:true}
   };
   var CHARNAME = {};
   (function(){
@@ -550,7 +518,7 @@
   var PAGE_SIZE = 20;   // 一次显示 20 条（宽屏正好 4 列 × 5 行）
 
   var state = {
-    char:"all", plat:"all", days:7, rel:"weak", view:"flow",
+    char:"all", plat:"all", days:7, rel:"weak",
     lang:"t",            // "t" 繁體 / "s" 简体
     theme:"dark",        // "dark" / "light"
     shown:PAGE_SIZE,     // 当前显示到第几条，换筛选条件时归零
@@ -612,6 +580,7 @@
   }
 
   if(!DATA || !DATA.posts){
+    el("notice").style.display = "";
     el("notice").innerHTML =
       '<span class="i">🧩</span><span><b>還沒抓到數據。</b> 先雙擊資料夾裡的 <code>更新數據.bat</code>，'+
       '跑完再重新整理這頁。</span>';
@@ -619,9 +588,10 @@
 
   var META = (DATA && DATA.meta) || {platforms:{}, generated_at:null, total:0};
 
-  // 公開版可以整批屏蔽平台（config.json 的 hide_platforms）：
-  // GitHub 在大陸時好時壞，留著只會多出一堆打不開的連結。
-  // 這裡只是「不畫」，資料本身還在——想恢復，把 config 那個陣列清空再跑一次 split 就好。
+  // 公開版可以整批屏蔽平台（config.json 的 hide_platforms）。
+  // 現在的用法：把 github 擋掉——大陸打不開，公開頁只會多出一排死鏈；
+  // 那批內容改在本機的「本機-GitHub.html」看，不上線。
+  // 這裡只是「不畫」，posts.json 裡資料還在——想恢復，把 config 那個陣列清空再跑一次 split。
   var HIDDEN_PLAT = (META && META.hidden_platforms) || [];
   var PLAT_KEYS = Object.keys(PLAT).filter(function(k){ return HIDDEN_PLAT.indexOf(k) < 0; });
   var POSTS = ((DATA && DATA.posts) || []).slice();
@@ -684,12 +654,9 @@
     }).join(""));
 
     setHtml("plats", PLAT_KEYS.map(function(k){
-      var live = PLAT[k].live;
       var n = countBy(function(p){return p.platform===k;});
-      var cls = "chip" + (state.plat===k?" on":"") + (live?"":" dead");
-      var style = live ? "" : ' style="opacity:.42;cursor:not-allowed"';
-      return '<button class="'+cls+'" data-p="'+k+'"'+style+(live?"":' title="未接入"')+'>'+
-             PLAT[k].icon+' '+PLAT[k].name+(live?'<span class="n">'+n+'</span>':' · 未接入')+'</button>';
+      return '<button class="chip'+(state.plat===k?" on":"")+'" data-p="'+k+'">'+
+             PLAT[k].icon+' '+esc(PLAT[k].name)+'<span class="n">'+n+'</span></button>';
     }).join(""));
   }
 
@@ -699,7 +666,7 @@
   });
   el("plats").addEventListener("click", function(e){
     var b = e.target.closest("[data-p]"); if(!b) return;
-    if(!PLAT[b.dataset.p].live) return;      // 未接入的平台，点了不装样子
+    if(!PLAT[b.dataset.p]) return;
     state.plat = b.dataset.p; state.shown = PAGE_SIZE; buildChips(); render();
   });
   el("when").addEventListener("click", function(e){
@@ -712,12 +679,6 @@
   el("rel").addEventListener("click", function(e){
     var b = e.target.closest("[data-r]"); if(!b) return;
     state.rel = b.dataset.r; state.shown = PAGE_SIZE;
-    [].forEach.call(this.querySelectorAll("button"), function(x){ x.classList.toggle("on", x===b); });
-    render();
-  });
-  el("view").addEventListener("click", function(e){
-    var b = e.target.closest("[data-v]"); if(!b) return;
-    state.view = b.dataset.v;
     [].forEach.call(this.querySelectorAll("button"), function(x){ x.classList.toggle("on", x===b); });
     render();
   });
@@ -760,7 +721,7 @@
 
   function syncToggles(){
     [["when","d",state.days],["rel","r",state.rel],
-     ["sort","s",state.sort],["view","v",state.view]].forEach(function(cfg){
+     ["sort","s",state.sort]].forEach(function(cfg){
       var box = el(cfg[0]);
       if(!box.querySelectorAll) return;
       [].forEach.call(box.querySelectorAll("button"), function(x){
@@ -825,16 +786,24 @@
   // ---------- 状态条 ----------
   function renderStats(){
     var vs = visible();
-    var parts = PLAT_KEYS.map(function(k){
-      var on = PLAT[k].live;
-      var dot = !on ? "r" : (DEGRADED[k] ? "o" : "g");
-      var n = vs.filter(function(p){return p.platform===k;}).length;
-      return '<div class="stat'+(on?"":" off")+'">'+
-        '<div class="k"><span class="dot '+dot+'"></span>'+PLAT[k].name+'</div>'+
-        '<div class="v">'+(on? n : "未接入")+(on?'<small>條</small>':'')+'</div></div>';
-    });
-    parts.unshift('<div class="stat"><div class="k">目前篩出</div><div class="v">'+vs.length+
-                  '<small>條</small></div></div>');
+    var parts = ['<div class="stat"><div class="k">目前篩出</div><div class="v">'+vs.length+
+                 '<small>條</small></div></div>'];
+
+    if(PLAT_KEYS.length > 1){
+      // 多平台時每個平台一張卡，順便把「這輪沒抓成」的標出來
+      PLAT_KEYS.forEach(function(k){
+        var dot = DEGRADED[k] ? "o" : "g";
+        var n = vs.filter(function(p){return p.platform===k;}).length;
+        parts.push('<div class="stat"><div class="k"><span class="dot '+dot+'"></span>'+
+                   esc(PLAT[k].name)+'</div><div class="v">'+n+'<small>條</small></div></div>');
+      });
+    } else {
+      // 只剩一個平台時，平台分欄等於把同一個數字寫兩遍，
+      // 換成強／弱相關的拆分——那才是這裡真正需要一眼看到的取捨
+      var strong = vs.filter(function(p){return p.match==="strong";}).length;
+      parts.push('<div class="stat"><div class="k">強相關</div><div class="v">'+strong+'<small>條</small></div></div>');
+      parts.push('<div class="stat"><div class="k">相關</div><div class="v">'+(vs.length-strong)+'<small>條</small></div></div>');
+    }
     setHtml("stats", parts.join(""));
   }
 
@@ -868,8 +837,6 @@
       icon = "🕸"; label = "相關推薦";
     } else if(f.indexOf("UP主") >= 0 || f.indexOf("UP 主") >= 0){
       icon = "👤"; label = "UP 主";
-    } else if(p.platform === "github"){
-      icon = "🐙"; label = "GitHub";
     }
     return '<span class="src" title="'+esc(f || "來源不明")+'">'+icon+' '+label+'</span>';
   }
@@ -915,11 +882,6 @@
     var vs = visible();
     renderStats();
 
-    var isFlow = state.view === "flow";
-    el("flow").style.display = isFlow ? "grid" : "none";
-    el("cols").style.display = isFlow ? "none" : "grid";
-
-    // 两个视图都先渲染好、再切换显示，避免切过去的时候空白一下
     vs = sortBy(vs, state.sort);
 
     if(vs.length){
@@ -936,27 +898,6 @@
       }
       setHtml("flow", '<div class="emptycol" style="grid-column:1/-1">'+empty+'</div>');
     }
-
-    setHtml("cols", PLAT_KEYS.map(function(k){
-        var pl = PLAT[k];
-        var list = sortBy(vs.filter(function(p){return p.platform===k;}), state.sort).slice(0,10);
-        var head = '<div class="col-h"><span class="nm">'+pl.icon+' '+pl.name+'</span>'+
-                   '<span class="ct">'+(pl.live? list.length+" 條" : "未接入")+'</span></div>';
-        var body;
-        if(!pl.live){
-          var note = (META.platforms && META.platforms[k] && META.platforms[k].note) || "未接入";
-          body = '<div class="emptycol">🚫<br>'+esc(note)+'</div>';
-        } else if(!list.length){
-          body = '<div class="emptycol">這段時間沒有符合條件的帖子</div>';
-        } else {
-          body = list.map(function(p,i){
-            return '<a class="mini" href="'+esc(p.url)+'" target="_blank" rel="noopener noreferrer">'+
-              '<span class="rk">'+(i+1)+'</span><span><span class="t">'+esc(titleOf(p))+'</span>'+
-              '<span class="h">'+esc(p.heat_label)+'</span></span></a>';
-          }).join("");
-        }
-        return '<div class="col">'+head+body+'</div>';
-      }).join(""));
   }
 
   // ---------- 详情弹窗 ----------
@@ -1006,7 +947,7 @@
   el("flow").addEventListener("click", function(e){
     if(e.target.closest("#resetAll")){         // 空状态里的「清空全部筛选」
       state.q = ""; state.char = "all"; state.plat = "all";
-      state.rel = "weak"; state.days = 7; state.view = "flow";
+      state.rel = "weak"; state.days = 7;
       state.shown = PAGE_SIZE;
       if(qInput.value) qInput.value = "";
       syncQueryUI(); syncToggles(); buildChips(); render();
@@ -1133,7 +1074,7 @@
   function applyStaticLang(){
     var root = document.querySelector(".wrap");
     if(!root || !root.childNodes) return;
-    var skip = {flow:1, cols:1, stats:1, loadhint:1, chars:1, plats:1};
+    var skip = {flow:1, stats:1, loadhint:1, chars:1, plats:1};
     var nodes = [];
     (function walk(n){
       for(var i=0;i<(n.childNodes||[]).length;i++){

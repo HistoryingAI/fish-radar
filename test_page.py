@@ -117,6 +117,10 @@ def main():
             ok("posts_top.js 带了 meta（统计卡不会显示 0）")
         else:
             bad("posts_top.js 没带 meta，统计卡会显示 0")
+        if '"platform": "github"' in txt:
+            bad("posts_top.js 里还有 GitHub 条目（hide_platforms 没生效，跑一次 split_posts.py）")
+        else:
+            ok("posts_top.js 不含 GitHub（公开版只管 B 站）")
 
     print("\n四、内容")
     for word, label in [("肥魚雷達", "标题"), ("開啟原帖", "原帖链接"),
@@ -217,6 +221,26 @@ def main():
         ok("有 / 快捷键聚焦搜索")
     else:
         warn("没看到 / 快捷键")
+
+    print("\n八、平台只剩 B 站（2026-10-27 的決定）")
+    stray = [w for w in ("小紅書", "小红书", "推特", "小黑盒") if w in html]
+    if stray:
+        bad("页面上还有「%s」——公开版只放 B 站" % "、".join(stray))
+    else:
+        ok("没有小红书／推特／小黑盒的痕迹")
+
+    if 'id="cols"' in html or "分平台榜" in html:
+        bad("还留着「分平台榜」")
+    else:
+        ok("分平台榜已移除")
+
+    cfg_path = os.path.join(HERE, "config.json")
+    if os.path.exists(cfg_path):
+        cfg = open(cfg_path, encoding="utf-8").read()
+        if '"hide_platforms"' in cfg and "github" in cfg.split('"hide_platforms"')[1][:40]:
+            ok("config.json 把 github 放进 hide_platforms")
+        else:
+            warn("config.json 的 hide_platforms 里没有 github，GitHub 会重新出现在公开页")
 
     print("\n" + "=" * 52)
     if fails:

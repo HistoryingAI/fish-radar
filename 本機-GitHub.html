@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 這個頁面只在本機開，不部署、不給搜索引擎收錄 -->
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<title>肥魚雷達 · 本機 GitHub 清單（不上線）</title>
+<style>
+  :root{
+    --bg:#070d18; --card:#101d31; --line:rgba(120,180,255,.14);
+    --txt:#e8f1ff; --dim:#8ba3c7; --dim2:#5f7699;
+    --accent:#4cc9f0; --hot:#ff7a45; --ok:#3ddc97; --warn:#ffb84d;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;padding:26px 20px 60px;background:var(--bg);color:var(--txt);
+    font:14px/1.65 "Segoe UI","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+    max-width:1120px;margin-inline:auto;
+  }
+  h1{font-size:19px;margin:0 0 6px}
+  .sub{color:var(--dim2);font-size:12.5px;margin-bottom:16px}
+  .banner{
+    background:linear-gradient(90deg,rgba(255,184,77,.13),rgba(255,184,77,.03));
+    border:1px solid rgba(255,184,77,.35);border-radius:12px;
+    padding:11px 14px;font-size:12.5px;line-height:1.7;color:#ffd9a8;margin-bottom:18px;
+  }
+  .banner b{color:var(--warn)}
+  .bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+  input[type=search]{
+    flex:1;min-width:220px;background:rgba(255,255,255,.04);border:1px solid var(--line);
+    border-radius:10px;padding:9px 13px;color:var(--txt);font:inherit;font-size:13px;outline:none;
+  }
+  input[type=search]:focus{border-color:rgba(76,201,240,.5)}
+  .count{color:var(--dim2);font-size:12.5px;white-space:nowrap}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{
+    text-align:left;font-size:11px;letter-spacing:1px;color:var(--dim2);font-weight:600;
+    padding:0 10px 9px;border-bottom:1px solid var(--line);white-space:nowrap;
+  }
+  td{padding:11px 10px;border-bottom:1px solid rgba(120,180,255,.08);vertical-align:top}
+  tr:hover td{background:rgba(76,201,240,.045)}
+  .rk{color:var(--dim2);font-weight:800;font-size:11.5px;width:34px}
+  a.t{color:var(--txt);text-decoration:none;font-weight:600}
+  a.t:hover{color:var(--accent)}
+  .repo{color:var(--dim2);font-size:11.5px;margin-top:3px}
+  .sum{color:var(--dim);font-size:12px;margin-top:5px;line-height:1.6;
+       display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .heat{color:var(--hot);font-weight:700;font-size:12.5px;white-space:nowrap}
+  .tag{font-size:10.5px;padding:2px 7px;border-radius:5px;white-space:nowrap}
+  .strong{background:rgba(61,220,151,.16);color:var(--ok)}
+  .weak{background:rgba(120,140,170,.18);color:var(--dim)}
+  .empty{padding:40px;text-align:center;color:var(--dim2)}
+  code{background:rgba(255,255,255,.07);padding:1px 6px;border-radius:5px;font-size:12px;color:#9fd9ff}
+</style>
+</head>
+<body>
+
+<h1>本機 GitHub 清單</h1>
+<div class="sub" id="sub">載入中…</div>
+
+<div class="banner">
+  <b>這一頁不會上線。</b> 它讀的是 <code>data/github_local.js</code>，那個檔案沒有被
+  <code>build.sh</code> 放進 <code>dist/</code>，所以 Cloudflare 上沒有它，搜索引擎也抓不到。
+  <br>要更新：雙擊 <code>更新數據.bat</code>（它會重跑 split_posts.py，順手把這個檔案也刷新）。
+</div>
+
+<div class="bar">
+  <input type="search" id="q" placeholder="搜尋倉庫名、作者、簡介…">
+  <span class="count" id="cnt"></span>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th><th>倉庫</th><th>Star</th><th>角色</th><th>相關</th><th>最後看到</th>
+    </tr>
+  </thead>
+  <tbody id="rows"></tbody>
+</table>
+
+<script src="data/github_local.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var CHAR = {
+    deepseek:"🐋 DeepSeek 娘", claude:"🅒 Claude 娘", gpt:"🤖 GPT 娘",
+    grok:"⚡ Grok 娘", gemini:"✨ Gemini 娘", kimi:"🌙 Kimi 娘",
+    doubao:"🫧 豆包娘", qwen:"☁️ 千問娘", other:"🌀 其他"
+  };
+
+  var DATA = window.FISH_RADAR_LOCAL || {posts:[], count:0, generated_at:null};
+  var POSTS = DATA.posts || [];
+  var q = document.getElementById("q");
+  var rows = document.getElementById("rows");
+  var cnt = document.getElementById("cnt");
+
+  document.getElementById("sub").textContent =
+    (DATA.generated_at ? "數據抓取時間：" + String(DATA.generated_at).replace("T"," ").slice(0,16) + "　·　" : "") +
+    "共 " + POSTS.length + " 條（按 Star 排序）";
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function ago(ts){
+    if(!ts) return "—";
+    var d = Math.floor((Date.now()/1000 - ts)/86400);
+    if(d <= 0) return "今天";
+    if(d === 1) return "昨天";
+    return d + " 天前";
+  }
+
+  function render(){
+    var kw = (q.value || "").trim().toLowerCase();
+    var list = POSTS.filter(function(p){
+      if(!kw) return true;
+      var hay = [p.title, p.title_t, p.author, p.summary, p.note].join(" ").toLowerCase();
+      return kw.split(/\s+/).filter(Boolean).every(function(t){ return hay.indexOf(t) >= 0; });
+    });
+
+    cnt.textContent = kw ? ("篩出 " + list.length + " / " + POSTS.length + " 條") : "";
+
+    if(!list.length){
+      rows.innerHTML = '<tr><td colspan="6" class="empty">' +
+        (kw ? "沒有符合「" + esc(kw) + "」的倉庫" : "還沒有 GitHub 數據，先跑一次 更新數據.bat") +
+        '</td></tr>';
+      return;
+    }
+
+    rows.innerHTML = list.map(function(p, i){
+      var ch = CHAR[p.character] || p.character || "—";
+      var m = p.metrics || {};
+      var stars = (m["Star"] != null ? m["Star"] : p.heat) || 0;
+      return '<tr>' +
+        '<td class="rk">' + (i + 1) + '</td>' +
+        '<td>' +
+          '<a class="t" href="' + esc(p.url) + '" target="_blank" rel="noopener noreferrer">' +
+            esc(p.title_t || p.title || "(無標題)") + '</a>' +
+          '<div class="repo">@' + esc(p.author || "?") +
+            (m["Fork"] != null ? "　·　Fork " + m["Fork"] : "") +
+            (m["Issue"] != null ? "　·　Issue " + m["Issue"] : "") +
+            (p.pinned ? "　·　📌 手動指定" : "") +
+          '</div>' +
+          (p.summary ? '<div class="sum">' + esc(p.summary) + '</div>' : '') +
+        '</td>' +
+        '<td class="heat">' + stars + '</td>' +
+        '<td style="white-space:nowrap">' + esc(ch) + '</td>' +
+        '<td><span class="tag ' + (p.match === "strong" ? "strong" : "weak") + '">' +
+          (p.match === "strong" ? "強相關" : "相關") + '</span></td>' +
+        '<td style="color:var(--dim2);white-space:nowrap">' + ago(p.last_seen ? new Date(p.last_seen).getTime()/1000 : p.published_ts) + '</td>' +
+      '</tr>';
+    }).join("");
+  }
+
+  q.addEventListener("input", render);
+  render();
+})();
+</script>
+</body>
+</html>

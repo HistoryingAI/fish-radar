@@ -52,19 +52,38 @@ def vgrad(img, top, bottom):
         d.line([(0, y), (W, y)], fill=c)
 
 
-def main():
-    stats = {"total": 0, "bilibili": 0, "github": 0, "generated": ""}
+def public_stats():
+    """跟 split_posts.py 用同一套規則：config.json 的 hide_platforms 裡的不算公開條目。
+
+    分享卡片上的「收錄 N 條」要跟網頁上看到的數字一致，
+    不然貼到群裡寫 703、點進去只有 644，看起來就像在虛報。
+    """
+    stats = {"total": 0, "strong": 0, "classic": 0, "generated": ""}
     p = os.path.join(HERE, "data", "posts.json")
-    if os.path.exists(p):
-        with open(p, encoding="utf-8") as f:
-            doc = json.load(f)
-        posts = doc.get("posts", [])
-        stats["total"] = len(posts)
-        stats["bilibili"] = sum(1 for x in posts if x.get("platform") == "bilibili")
-        stats["github"] = sum(1 for x in posts if x.get("platform") == "github")
-        g = doc.get("meta", {}).get("generated_at", "")
-        if g:
-            stats["generated"] = g[:10]
+    if not os.path.exists(p):
+        return stats
+
+    hidden = []
+    try:
+        with open(os.path.join(HERE, "config.json"), encoding="utf-8") as f:
+            hidden = [str(x) for x in (json.load(f).get("hide_platforms") or [])]
+    except Exception:
+        pass
+
+    with open(p, encoding="utf-8") as f:
+        doc = json.load(f)
+    pub = [x for x in doc.get("posts", []) if x.get("platform") not in hidden]
+    stats["total"] = len(pub)
+    stats["strong"] = sum(1 for x in pub if x.get("match") == "strong")
+    stats["classic"] = sum(1 for x in pub if x.get("classic"))
+    g = doc.get("meta", {}).get("generated_at", "")
+    if g:
+        stats["generated"] = g[:10]
+    return stats
+
+
+def main():
+    stats = public_stats()
 
     img = Image.new("RGB", (W, H))
     vgrad(img, (10, 18, 32), (7, 13, 24))
@@ -87,9 +106,9 @@ def main():
     d.text((104, 128), "肥魚雷達", font=pick_font(96), fill=(232, 241, 255, 255))
     d.text((110, 244), "F I S H   R A D A R", font=pick_font(30), fill=(76, 201, 240, 230))
 
-    d.text((110, 306), "AI 娘二創 · 全網熱帖聚合",
+    d.text((110, 306), "AI 娘二創 · B 站熱帖聚合",
            font=pick_font(40), fill=(168, 194, 226, 255))
-    d.text((110, 366), "B 站 + GitHub，分平台排序，每一條都連回原帖",
+    d.text((110, 366), "每一條都連回原帖，不搬運圖片",
            font=pick_font(26), fill=(122, 146, 178, 255))
 
     # 底部数字条
@@ -98,8 +117,8 @@ def main():
                         fill=(18, 32, 54, 220), outline=(76, 201, 240, 90), width=1)
     items = [
         ("收錄", "%d 條" % stats["total"]),
-        ("B 站", "%d" % stats["bilibili"]),
-        ("GitHub", "%d" % stats["github"]),
+        ("強相關", "%d" % stats["strong"]),
+        ("經典", "%d" % stats["classic"]),
     ]
     x = 136
     for label, val in items:
