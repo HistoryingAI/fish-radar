@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="zh-Hans">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -381,7 +381,7 @@
   .linkbtn:hover{color:#8fd8f5}
 </style>
 </head>
-<body>
+<body data-theme="light">
 <div class="wrap">
 
   <header>
@@ -519,8 +519,8 @@
 
   var state = {
     char:"all", plat:"all", days:7, rel:"weak",
-    lang:"t",            // "t" 繁體 / "s" 简体
-    theme:"dark",        // "dark" / "light"
+    lang:"s",            // "s" 简体（默认）/ "t" 繁體
+    theme:"light",       // "light" 浅色（默认）/ "dark" 深色
     shown:PAGE_SIZE,     // 当前显示到第几条，换筛选条件时归零
     q:"",                // 搜索词（空格隔开 = 同时满足）
     sort:"heat"          // heat 热度 / new 最新 / delta 涨幅

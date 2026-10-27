@@ -98,6 +98,22 @@ ok(`数据 ${global.FISH_RADAR_TOP.posts.length} 条，meta 说总共 ${total} �
 try { new Function(inline)(); ok("脚本执行没有抛错"); }
 catch (e) { bad("脚本抛错：" + e.message); console.log(e.stack.split("\n").slice(0, 5).join("\n")); process.exit(1); }
 
+// ---------- 默认值（2026-10-27 改：浅色 + 简体） ----------
+console.log("\n零、默认长相（浅色 + 简体）");
+if (store.langBtn.textContent === "简") ok("默认是简体（按钮显示「简」）");
+else bad("默认语言不对：" + store.langBtn.textContent);
+if (body.getAttribute("data-theme") === "light") ok("默认是浅色");
+else bad("默认主题不对：" + body.getAttribute("data-theme"));
+if (store.themeBtn.textContent === "🌙") ok("主题按钮显示 🌙（提示可切深色）");
+else bad("主题按钮不对：" + store.themeBtn.textContent);
+if (/强相关|相关/.test(store.flow.innerHTML)) ok("卡片一上来就是简体");
+else bad("卡片不是简体");
+
+// 后面所有断言都是繁体文案，先切回繁体再往下走
+store.langBtn.fire("click");
+if (store.langBtn.textContent === "繁") ok("切到繁体，继续后面的检查");
+else bad("切不到繁体：" + store.langBtn.textContent);
+
 const cards1 = count(store.flow.innerHTML, 'class="card"');
 // 首屏 30 条里，未必都在 7 天窗口内（数据放久了会滑出去），所以要按实际算
 const topVisible = expectedVisible(global.FISH_RADAR_TOP.posts);
@@ -174,13 +190,15 @@ else bad("按钮没恢复：" + store.langBtn.textContent);
 // ---------- 深浅色 ----------
 console.log("\n四、深浅色切换");
 store.themeBtn.fire("click");
-if (body.getAttribute("data-theme") === "light") ok("切到浅色（body[data-theme=light]）");
-else bad("浅色没生效：" + body.getAttribute("data-theme"));
-if (store.themeBtn.textContent === "🌙") ok("按钮变成 🌙");
+if (body.getAttribute("data-theme") === "dark") ok("切到深色（body[data-theme=dark]）");
+else bad("深色没生效：" + body.getAttribute("data-theme"));
+if (store.themeBtn.textContent === "☀️") ok("按钮变成 ☀️");
 else bad("主题按钮文字不对：" + store.themeBtn.textContent);
 store.themeBtn.fire("click");
-if (body.getAttribute("data-theme") === "dark") ok("切回深色");
-else bad("切回深色失败");
+if (body.getAttribute("data-theme") === "light") ok("切回浅色");
+else bad("切回浅色失败");
+if (store.themeBtn.textContent === "🌙") ok("按钮恢复 🌙");
+else bad("按钮没恢复：" + store.themeBtn.textContent);
 
 // ---------- 补载 ----------
 setTimeout(() => {
