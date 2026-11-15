@@ -1,10 +1,10 @@
 {
- "last_attempt": "2026-11-14T23:08:20+08:00",
- "last_ok": "2026-11-14T23:08:20+08:00",
+ "last_attempt": "2026-11-15T13:06:18+08:00",
+ "last_ok": "2026-11-15T13:06:18+08:00",
  "consecutive_failures": 0,
  "last_error": null,
- "posts": 648,
- "took_seconds": 499.0,
- "runs": 24,
- "ok_runs": 24
+ "posts": 639,
+ "took_seconds": 377.0,
+ "runs": 25,
+ "ok_runs": 25
 }
