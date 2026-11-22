@@ -1,2 +1,2 @@
 /* 由 split_posts.py 自动生成，不要手改（method.html 的數字條用） */
-window.FISH_STATS = {"total":740,"bilibili":740,"github":0,"strong":361,"weak":379,"classic":45,"window_days":30};
+window.FISH_STATS = {"total":733,"bilibili":733,"github":0,"strong":360,"weak":373,"classic":46,"window_days":30};
