@@ -1,10 +1,10 @@
 {
- "last_attempt": "2026-11-26T18:06:21+08:00",
+ "last_attempt": "2026-11-27T13:05:13+08:00",
  "last_ok": "2026-11-26T18:06:21+08:00",
- "consecutive_failures": 0,
- "last_error": null,
- "posts": 764,
- "took_seconds": 379.0,
- "runs": 48,
+ "consecutive_failures": 1,
+ "last_error": "B 站被風控攔下（412），本輪數據不完整",
+ "posts": 485,
+ "took_seconds": 311.3,
+ "runs": 49,
  "ok_runs": 48
 }
